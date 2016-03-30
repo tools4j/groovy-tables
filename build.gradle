@@ -1,0 +1,66 @@
+group 'org.tools4j'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'groovy'
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    main {
+        groovy {
+            srcDir 'src/generatedmain/groovy'
+        }
+    }
+    test {
+        groovy {
+            srcDir 'src/generatedtest/groovy'
+        }
+    }
+    codegenmain {
+        groovy {
+            srcDir 'src/codegenmain/groovy'
+        }
+    }
+    codegentest {
+        groovy {
+            srcDir 'src/codegentest/groovy'
+        }
+    }
+}
+
+
+task genMain( type: JavaExec ) {
+    main = 'org.tools4j.groovytabledsl.OrDelegateGenerator'
+    classpath = sourceSets.codegenmain.runtimeClasspath
+}
+
+task genTest( type: JavaExec ) {
+    main = 'org.tools4j.groovytabledsl.TestClassGenerator'
+    classpath = sourceSets.codegentest.runtimeClasspath
+}
+
+clean.doFirst {
+    delete "${rootDir}/src/generatedmain"
+    delete "${rootDir}/src/generatedtest"
+}
+
+dependencies {
+    compile "org.codehaus.groovy:groovy-all:2.4.1"
+    codegenmainCompile "org.codehaus.groovy:groovy-all:2.4.1"
+    codegentestCompile "org.codehaus.groovy:groovy-all:2.4.1"
+    codegentestCompile sourceSets.codegenmain.output
+
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile "org.spockframework:spock-core:1.0-groovy-2.4"
+
+    // dependencies for using Spock
+    testCompile "org.hamcrest:hamcrest-core:1.3" // only necessary if Hamcrest matchers are used
+    testRuntime "cglib:cglib-nodep:3.1"          // allows mocking of classes (in addition to interfaces)
+    testRuntime "org.objenesis:objenesis:2.1"    // allows mocking of classes without default constructor (together with CGLIB)
+}
+
+compileGroovy.dependsOn(genMain)
+compileTestGroovy.dependsOn(genTest)
