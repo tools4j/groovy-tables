@@ -72,18 +72,22 @@ List<Book> books = CreateFromTable.createFromTable(Book.class, ConstructionMetho
 ```
 The field names (column headings) are only used when the api attempts to call setter methods after constructing an object.  So if field names are omitted, the API will simply not attempt to construct an instance using reflection.
 ###Methods of construction
-There are three methods of construction.  Class Constructors, Static Factory Methods, and Reflection  
+There are three methods of construction.  Class Constructors, Static Factory Methods, and Reflection
+  
 1. Class Constructors
 The API takes constructors as a preference compared to the other two methods.  The API will look at each constructor and will compare the parameters of the constructor, with the given arguments.  If the given arguments can be coerced into the list of parameters in the constructor, then that constructor is deemed a candidate.
 2. Static Factory Methods
 The API first builds a list of static class methods, which return a type which matches the class we are constructing.  Then, the same as for contructors, the method's parameters are compared with the given arguments to discover matches.
 3. Reflection 
+
 The API will first look to see if a zero arg constructor exists.  If it does, it will then see if a suitable setter exists for each argument given (this is why field names are required when the Reflection method is used).  If a setter cannot be found, then the API checks whether a field can be accessed directly.
 ####How a construction method is selected
 Suitable construction methods are analyzed before construction takes place.  A decision is then made regarding the most suitable construction method.  This decision is made based on:
+
 1. Any construction method filter that the caller has passed.  (No filter is passed by default).
 2. The type of construction.  Class Constructors take precedence over Static Factory Methods which take precedence over straight Reflection
 3. Whether any argument coercion is required.  For example, a static factory method whose parameters _exactly_ match the types passed as arguments in the table, will take precedence over a constructor which requires that an Integer argument be cast to a Long constructor parameter.
+
 A construction method is selected separately for each 'line' of the table.  In the future we might cache last used construction methods but initial performance testing deemed little benefit was gained in terms of milliseconds of execution.
 ##How to install
 TODO Maven Central Reference here (once published)
