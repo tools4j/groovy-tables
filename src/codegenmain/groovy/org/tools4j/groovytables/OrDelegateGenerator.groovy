@@ -15,6 +15,8 @@ class OrDelegateGenerator {
                 "import static org.tools4j.groovytables.SimpleTableParser.*\n" +
                 "\n" +
                 "/**\n" +
+                " * Inspired by Christian Baranowski's blog post http://tux2323.blogspot.co.uk/2013/04/simple-table-dsl-in-groovy.html \n" +
+                " * \n" +
                 " * GENERATED CLASS, do not update directly\n" +
                 " */\n" +
                 "class OrDelegate {\n");

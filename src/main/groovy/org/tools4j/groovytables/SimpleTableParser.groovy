@@ -2,6 +2,9 @@ package org.tools4j.groovytables
 
 import groovy.transform.*
 
+/**
+ * Inspired by Christian Baranowski's blog post http://tux2323.blogspot.co.uk/2013/04/simple-table-dsl-in-groovy.html
+ */
 class SimpleTableParser {
     private static ThreadLocal<List> context = new ThreadLocal<List>()
 
