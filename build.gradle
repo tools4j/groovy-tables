@@ -33,12 +33,12 @@ sourceSets {
 
 
 task genMain( type: JavaExec ) {
-    main = 'org.tools4j.groovytabledsl.OrDelegateGenerator'
+    main = 'org.tools4j.groovytables.OrDelegateGenerator'
     classpath = sourceSets.codegenmain.runtimeClasspath
 }
 
 task genTest( type: JavaExec ) {
-    main = 'org.tools4j.groovytabledsl.TestClassGenerator'
+    main = 'org.tools4j.groovytables.TestClassGenerator'
     classpath = sourceSets.codegentest.runtimeClasspath
 }
 
