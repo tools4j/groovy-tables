@@ -44,7 +44,7 @@ List<Quote> quotes = GroovyTables.createListOf(Quote).fromTable {
     "AUD/USD" | 1.0029  | 5000000
 }
 ```
-By default groovytabledsl uses reflection to find a suitable constructor or static factory method to create instances of the given class.  You can give the api a filter to 'force' a certain mode of construction.  This example passes a filter which only accepts constructors. e.g.
+By default groovytabledsl finds a suitable constructor or static factory method to create instances of the given class.  You can give the api a filter to 'force' a certain mode of construction.  This example passes a filter which only accepts constructors. e.g.
 ```
 List<Book> books = GroovyTables.createFromTable(Book.class, ConstructionMethodFilter.CONSTRUCTORS, {
     author                | title                    | cost  | year
