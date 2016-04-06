@@ -13,13 +13,13 @@ import static org.tools4j.groovytables.SimpleTableParser.Var
  */
 @TypeChecked
 class CreateFromTable {
-    static <T> List<T> createFromTable(final Class<T> clazz, final Closure tableContent) {
+    protected static <T> List<T> createFromTable(final Class<T> clazz, final Closure tableContent) {
         return createFromTable(clazz, ConstructionMethodFilter.INCLUDE_ALL, tableContent)
     }
 
-    static <T> List<T> createFromTable(final Class<T> clazz, final Predicate<ConstructionMethod> constructionMethodFilter, final Closure tableContent) {
+    protected static <T> List<T> createFromTable(final Class<T> clazz, final Predicate<ConstructionMethod> constructionMethodFilter, final Closure tableContent) {
         final long startTime = System.currentTimeMillis()
-        final List<Row> rows = SimpleTableParser.asListOfRows(tableContent);
+        final List<Row> rows = SimpleTableParser.createListOfRows(tableContent);
         final List<T> rowsAsObjects = new ArrayList<T>(rows.size())
 
         if(rows.size() == 0){
@@ -50,15 +50,33 @@ class CreateFromTable {
         return rowsAsObjects;
     }
 
-    /*
-    Using chained statements
-     */
-
-    static class Builder<T>{
+    protected static class Builder<T>{
         final Class<T> clazz
+        Predicate<ConstructionMethod> constructionMethodFilter = null
 
         Builder(final Class<T> clazz) {
             this.clazz = clazz
+        }
+
+        Builder withFilter(final Predicate<ConstructionMethod> constructionMethodFilter){
+            if(this.constructionMethodFilter == null){
+                this.constructionMethodFilter = constructionMethodFilter
+            } else {
+                throw new IllegalArgumentException("Construction method filter has already been set.  It is not possible to set this twice.  Existing filter: ${this.constructionMethodFilter} New filter trying to set: ${constructionMethodFilter}")
+            }
+            return this;
+        }
+
+        Builder usingJustConstructors(){
+            return withFilter(ConstructionMethodFilter.CONSTRUCTORS)
+        }
+
+        Builder usingJustStaticFactoryMethods(){
+            return withFilter(ConstructionMethodFilter.STATIC_FACTORY_METHODS)
+        }
+
+        Builder usingJustReflection(){
+            return withFilter(ConstructionMethodFilter.REFLECTION)
         }
 
         List<T> fromTable(final Closure tableContent){
@@ -66,7 +84,7 @@ class CreateFromTable {
         }
     }
 
-    static <T> Builder<T> createListOf(final Class<T> clazz) {
+    protected static <T> Builder<T> createListOf(final Class<T> clazz) {
         return new Builder(clazz)
     }
 }

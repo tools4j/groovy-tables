@@ -15,7 +15,7 @@ import static org.tools4j.groovytables.Suitability.*
  */
 class ReflectionConstructionMethodTest extends Specification {
     @Unroll
-    def "GetSuitableSetterMethod"() {
+    def "test GetSuitableSetterMethod"() {
         expect:
         ReflectionConstructionMethod reflectionMethod = new ReflectionConstructionMethod<>(Book)
 
@@ -33,7 +33,7 @@ class ReflectionConstructionMethodTest extends Specification {
     }
 
     @Unroll
-    def "GetSuitableDirectAccessMethod"() {
+    def "test GetSuitableDirectAccessMethod"() {
         expect:
         ReflectionConstructionMethod reflectionMethod = new ReflectionConstructionMethod<>(Book)
 
@@ -51,7 +51,7 @@ class ReflectionConstructionMethodTest extends Specification {
     }
 
     @Unroll
-    def "GetMostSuitableFieldSetMethod"() {
+    def "test GetMostSuitableFieldSetMethod"() {
         expect:
         ReflectionConstructionMethod reflectionMethod = new ReflectionConstructionMethod<>(Book)
 
@@ -70,7 +70,7 @@ class ReflectionConstructionMethodTest extends Specification {
 
 
     @Unroll
-    def "GetReflectionPrecursor"() {
+    def "test GetReflectionPrecursor"() {
         expect:
         ReflectionConstructionMethod reflectionMethod = new ReflectionConstructionMethod<>(Book)
 
@@ -97,7 +97,7 @@ class ReflectionConstructionMethodTest extends Specification {
     }
 
     @Unroll
-    def "Construct"() {
+    def "test Construct"() {
         expect:
         ReflectionConstructionMethod reflectionMethod = new ReflectionConstructionMethod<>(Book)
 
@@ -114,7 +114,8 @@ class ReflectionConstructionMethodTest extends Specification {
         }
     }
 
-    def "CoerceToType Suitable"() {
+    @Unroll
+    def "test CoerceToType Suitable"() {
         when:
         final TypeCoercionResult constructionResult = TypeCoercion.coerceToType(Book, REFLECTION, ["title", "cost", "serialNumber"], args)
         final Book actualBook = (Book) constructionResult.result
@@ -130,7 +131,8 @@ class ReflectionConstructionMethodTest extends Specification {
         ["Power of One", 19.95, bd(123456)] as Object[]     | new Book("Power of One", 19.95, 123456)
     }
 
-    def "CoerceToType Unsuitable"() {
+    @Unroll
+    def "test CoerceToType Unsuitable"() {
         when:
         final TypeCoercionResult constructionResult = TypeCoercion.coerceToType(Book, CONSTRUCTORS, ["author", "title", "cost", "serialNumber"], args)
 

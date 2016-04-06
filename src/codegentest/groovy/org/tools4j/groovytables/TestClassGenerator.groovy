@@ -51,9 +51,9 @@ class TestClassGenerator {
                 "\n" +
                 "\n" +
                 "class SimpleTableParserFirstTwoArgsTest extends Specification {\n" +
-                "    public void \"test asListOfArrays two first elements of differing types\"() {\n" +
+                "    def \"test asListOfArrays two first elements of differing types\"() {\n" +
                 "        when:\n" +
-                "        final List<Object[]> listOfArrays = SimpleTableParser.asListOfArrays {\n");
+                "        final List<Object[]> listOfArrays = SimpleTableParser.createListOfArrays {\n");
 
         sb.append(tableSb.toString())
         sb.append("        }\n\n        then:\n")
@@ -85,9 +85,9 @@ class TestClassGenerator {
                 "\n" +
                 "\n" +
                 "class SimpleTableParserSubsequentTwoArgsTest extends Specification {\n" +
-                "    public void \"test asListOfArrays two subsequent elements of differing types\"() {\n" +
+                "    def \"test asListOfArrays two subsequent elements of differing types\"() {\n" +
                 "        when:\n" +
-                "        final List<Object[]> listOfArrays = SimpleTableParser.asListOfArrays {\n");
+                "        final List<Object[]> listOfArrays = SimpleTableParser.createListOfArrays {\n");
 
         sb.append(tableSb.toString())
         sb.append("        }\n\n        then:\n")
@@ -127,12 +127,12 @@ class TestClassGenerator {
                 "\n" +
                 "\n" +
                 "class SimpleTableParserSubsequentTwoArrayArgsTest extends Specification {\n" +
-                "    public void \"test asListOfArrays two subsequent elements of differing array types\"() {\n")
+                "    def \"test asListOfArrays two subsequent elements of differing array types\"() {\n")
 
         sb.append("    given:\n")
         sb.append(arraysSb.toString()).append("\n")
         sb.append("        when:\n" +
-                "        final List<Object[]> listOfArrays = SimpleTableParser.asListOfArrays {\n");
+                "        final List<Object[]> listOfArrays = SimpleTableParser.createListOfArrays {\n");
         sb.append(tableSb.toString())
         sb.append("        }\n\n        then:\n")
         sb.append(assertSb.toString())

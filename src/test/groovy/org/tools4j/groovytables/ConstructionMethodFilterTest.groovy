@@ -58,7 +58,7 @@ class ConstructionMethodFilterTest extends Specification {
         assert results.count {it instanceof ReflectionConstructionMethod} == 1
     }
 
-    def "WithName 'create'"() {
+    def "test WithName 'create'"() {
         when:
         List results = filter().withName("create").apply(BOOK_CONSTRUCTION_METHODS)
 

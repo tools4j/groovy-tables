@@ -1,2 +1,3 @@
 rootProject.name = 'groovytables'
+include 'groovytabledsl-release-test'
 

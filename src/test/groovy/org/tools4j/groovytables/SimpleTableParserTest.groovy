@@ -13,9 +13,9 @@ import static org.tools4j.groovytables.SimpleTableParser.Var
  * Time: 6:28 AM
  */
 class SimpleTableParserTest extends Specification {
-    public void "test with var headings"() {
+    def "test createListOfArrays with var headings"() {
         when:
-        final List<Object[]> listOfArrays = SimpleTableParser.asListOfArrays {
+        final List<Object[]> listOfArrays = GroovyTables.createListOfArrays {
             one | two   | three
             1   | 2     | 3
             2   | 3     | 5
@@ -31,14 +31,12 @@ class SimpleTableParserTest extends Specification {
     }
 
 
-    public void "test simple asListOfArrays"() {
+    def "test simple createListOfArrays"() {
         when:
-        final List<Object[]> listOfArrays = SimpleTableParser.asListOfArrays {
-
-            1 | 2 | 3
-            2 | 3 | 5
+        final List<Object[]> listOfArrays = GroovyTables.createListOfArrays {
+            1  | 2 | 3
+            2  | 3 | 5
             55 | 5 | 60
-
         }
 
         then:
@@ -50,11 +48,11 @@ class SimpleTableParserTest extends Specification {
 
 
 
-    public void "test asListOfArrays with different types"() {
+    def "test createListOfArrays with different types"() {
         given:
         final SimpleClass myInstance = new SimpleClass("hi")
         when:
-        final List<Object[]> listOfArrays = SimpleTableParser.asListOfArrays {
+        final List<Object[]> listOfArrays = GroovyTables.createListOfArrays {
 
             1.9d | (int) 2 | 3
             1.9 | 2 | myInstance
@@ -75,12 +73,12 @@ class SimpleTableParserTest extends Specification {
         assertActualEqualsExpected(listOfArrays.get(5), [false, "blah", true] as Object[])
     }
 
-    public void "test asListOfArrays two first elements of same type"() {
+    def "test createListOfArrays two first elements of same type"() {
         given:
         final SimpleClass myInstance = new SimpleClass("hi")
 
         when:
-        final List<Object[]> listOfArrays = SimpleTableParser.asListOfArrays {
+        final List<Object[]> listOfArrays = GroovyTables.createListOfArrays {
             1.9 | 1.8d
             4 | 2
             "blah1" | "blah2"
@@ -99,9 +97,9 @@ class SimpleTableParserTest extends Specification {
         assertActualEqualsExpected(listOfArrays.get(5), ['c', 'd'] as Object[])
     }
 
-    public void "test asListOfArrays two first elements of differing types"() {
+    def "test createListOfArrays two first elements of differing types"() {
         when:
-        final List<Object[]> listOfArrays = SimpleTableParser.asListOfArrays {
+        final List<Object[]> listOfArrays = GroovyTables.createListOfArrays {
             Integer.valueOf(2) | BigDecimal.valueOf(1.9)
             Integer.valueOf(2) | Double.MAX_VALUE
             Integer.valueOf(2) | true
@@ -219,9 +217,9 @@ class SimpleTableParserTest extends Specification {
         assertActualEqualsExpected(listOfArrays.get(55), ['c', "blah"] as Object[])
     }
 
-    public void "test asListOfArrays second_and_third_items of differing types"() {
+    def "test createListOfArrays second_and_third_items of differing types"() {
         when:
-        final List<Object[]> listOfArrays = SimpleTableParser.asListOfArrays {
+        final List<Object[]> listOfArrays = GroovyTables.createListOfArrays {
             "blah!" | Integer.valueOf(2) | BigDecimal.valueOf(1.9)
             "blah!" | Integer.valueOf(2) | Double.MAX_VALUE
             "blah!" | Integer.valueOf(2) | true

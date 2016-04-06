@@ -15,7 +15,7 @@ import static org.tools4j.groovytables.TestUtils.assertActualEqualsExpected
  */
 class StaticFactoryMethodCoercionTest extends Specification {
     @Unroll
-    def "GetConstructionPrecursor"() {
+    def "test GetConstructionPrecursor"() {
         expect:
         StaticFactoryMethod staticFactoryMethod = new StaticFactoryMethod(Book.getMethod("create", String, Double, long))
         ExecutableConstructionMethodPrecursor constructionPrecursor = staticFactoryMethod.getConstructionMethodPrecursor(rawArgs)
@@ -30,7 +30,7 @@ class StaticFactoryMethodCoercionTest extends Specification {
         NOT_SUITABLE            | ["only on arg"] as Object[]                           | null
     }
 
-    def "GetConstructionPrecursor then execute staticFactoryMethod"() {
+    def "test GetConstructionPrecursor then execute staticFactoryMethod"() {
         when:
         StaticFactoryMethod staticFactoryMethod = new StaticFactoryMethod(Book.getMethod("create", String, Double, long))
         ConstructionMethodPrecursor constructionPrecursor = staticFactoryMethod.getConstructionMethodPrecursor("Power of One", 19.95d, 123456L)
@@ -42,7 +42,8 @@ class StaticFactoryMethodCoercionTest extends Specification {
 
     }
 
-    def "CoerceToType Suitable"() {
+    @Unroll
+    def "test CoerceToType Suitable"() {
         when:
         final TypeCoercionResult constructionResult = TypeCoercion.coerceToType(Book, STATIC_FACTORY_METHODS, args)
         final Book actualBook = (Book) constructionResult.result
@@ -60,7 +61,8 @@ class StaticFactoryMethodCoercionTest extends Specification {
         [null] as Object[]                                  | new Book(null)
     }
 
-    def "CoerceToType Unsuitable"() {
+    @Unroll
+    def "test CoerceToType Unsuitable"() {
         when:
         final TypeCoercionResult constructionResult = TypeCoercion.coerceToType(Book, STATIC_FACTORY_METHODS, args)
 

@@ -4,7 +4,7 @@ Groovy Tables is a groovy library which allows you to create lists of objects us
 ##Examples
 The following example creates a list of Book objects
 ```
-List<Book> books = CreateFromTable.createListOf(Book.class).fromTable {
+List<Book> books = GroovyTables.createListOf(Book.class).fromTable {
     author                | title                    | cost  | year
     "Jane Austen"         | "Pride and Prejudice"    | 12.95 | 1813
     "Harper Lee"          | "To Kill a Mockingbird"  | 14.95 | 1960
@@ -18,7 +18,7 @@ List<Book> books = CreateFromTable.createListOf(Book.class).fromTable {
 If you wish to, you can create your own reusable constructor method, giving you an even more concise syntax, e.g:
 ```
 private List<Book> books(Closure closure){
-    return CreateFromTable.createListOf(Book.class).fromTable(closure)
+    return GroovyTables.createListOf(Book.class).fromTable(closure)
 }
 ```
 ...and in your test method:
@@ -36,7 +36,7 @@ List<Book> books = books {
 ```
 Here is another example creating a list of quotes:
 ```
-List<Quote> quotes = CreateFromTable.createListOf(Quote).fromTable {
+List<Quote> quotes = GroovyTables.createListOf(Quote).fromTable {
     symbol    | price   | quantity
     "AUD/USD" | 1.0023  | 1200000
     "AUD/USD" | 1.0024  | 1400000
@@ -46,7 +46,7 @@ List<Quote> quotes = CreateFromTable.createListOf(Quote).fromTable {
 ```
 By default groovytabledsl uses reflection to find a suitable constructor or static factory method to create instances of the given class.  You can give the api a filter to 'force' a certain mode of construction.  This example passes a filter which only accepts constructors. e.g.
 ```
-List<Book> books = CreateFromTable.createFromTable(Book.class, ConstructionMethodFilter.CONSTRUCTORS, {
+List<Book> books = GroovyTables.createFromTable(Book.class, ConstructionMethodFilter.CONSTRUCTORS, {
     author                | title                    | cost  | year
     "Jane Austen"         | "Pride and Prejudice"    | 12.95 | 1813
     "Harper Lee"          | "To Kill a Mockingbird"  | 14.95 | 1960
@@ -59,7 +59,7 @@ List<Book> books = CreateFromTable.createFromTable(Book.class, ConstructionMetho
 ```
 The filter is a just a Predicate<ConstructionMethod> so you are free to create your own filters.  The ConstructionMethodFilter also provides some method handy 'chainable' methods to help build filters.
 ```
-List<Book> books = CreateFromTable.createFromTable(Book.class, ConstructionMethodFilter.filter().withStaticFactoryMethods().withName("create"), {
+List<Book> books = GroovyTables.createFromTable(Book.class, ConstructionMethodFilter.filter().withStaticFactoryMethods().withName("create"), {
     author                | title                    | cost  | year
     "Jane Austen"         | "Pride and Prejudice"    | 12.95 | 1813
     "Harper Lee"          | "To Kill a Mockingbird"  | 14.95 | 1960
@@ -71,6 +71,21 @@ List<Book> books = CreateFromTable.createFromTable(Book.class, ConstructionMetho
 });
 ```
 The field names (column headings) are only used when the api attempts to call setter methods after constructing an object.  So if field names are omitted, the API will simply not attempt to construct an instance using reflection.
+
+You can also create simple lists of arrays.  e.g.
+```
+final List<Object[]> listOfArrays = GroovyTables.createListOfArrays {
+    1  | 2 | 3
+    2  | 3 | 5
+    55 | 5 | 60
+}
+
+println listOfArrays
+
+Output:
+[[1, 2, 3], [2, 3, 5], [55, 5, 60]]
+
+```
 ###Methods of construction
 There are three methods of construction.  Class Constructors, Static Factory Methods, and Reflection
   
@@ -86,8 +101,20 @@ Suitable construction methods are analyzed before construction takes place.  A d
 3. Whether any argument coercion is required.  For example, a static factory method whose parameters _exactly_ match the types passed as arguments in the table, will take precedence over a constructor which requires that an Integer argument be cast to a Long constructor parameter.
 
 A construction method is selected separately for each 'line' of the table.  In the future we might cache last used construction methods but initial performance testing deemed little benefit was gained in terms of milliseconds of execution.
-##How to install
-TODO Maven Central Reference here (once published)
+##How to use
+###Gradle
+```
+testCompile group: 'org.tools4j', name: 'groovy-tables', version: '1.0'
+```
+###Maven
+```
+<dependency>
+    <groupId>org.tools4j</groupId>
+    <artifactId>groovy-tables</artifactId>
+    <version>1.0</version>
+    <scope>test</scope>
+</dependency>
+```
 ##Acknowledgments
 Thanks to Christian Baranowski whose blog post here: http://tux2323.blogspot.co.uk/2013/04/simple-table-dsl-in-groovy.html, inspired the fancy usage of operator overloading to achieve the table like grammar.
 

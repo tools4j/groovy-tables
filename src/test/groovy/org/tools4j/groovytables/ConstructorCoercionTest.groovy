@@ -15,7 +15,7 @@ import static org.tools4j.groovytables.TestUtils.assertActualEqualsExpected
  */
 class ConstructorCoercionTest extends Specification {
     @Unroll
-    def "GetConstructionPrecursor"() {
+    def "test GetConstructionPrecursor"() {
         expect:
         ExecutableConstructionMethod constructionMethod = new ClassConstructor(Book.getConstructor(String, Double, long))
         ExecutableConstructionMethodPrecursor constructionPrecursor = constructionMethod.getConstructionMethodPrecursor([], rawArgs)
@@ -30,7 +30,7 @@ class ConstructorCoercionTest extends Specification {
         NOT_SUITABLE            | ["only on arg"] as Object[]                           | null
     }
 
-    def "GetConstructionPrecursor then execute constructor"() {
+    def "test GetConstructionPrecursor then execute constructor"() {
         when:
         ExecutableConstructionMethod constructionMethod = new ClassConstructor(Book.getConstructor(String, Double, long))
         ExecutableConstructionMethodPrecursor constructionPrecursor = constructionMethod.getConstructionMethodPrecursor([], "Power of One", 19.95d, 123456L)
@@ -42,7 +42,7 @@ class ConstructorCoercionTest extends Specification {
 
     }
 
-    def "CoerceToType Suitable"() {
+    def "test CoerceToType Suitable"() {
         when:
         final TypeCoercionResult constructionResult = TypeCoercion.coerceToType(Book, CONSTRUCTORS, [], args)
         final Book actualBook = (Book) constructionResult.result
@@ -60,7 +60,7 @@ class ConstructorCoercionTest extends Specification {
         [null] as Object[]                                  | new Book(null)
     }
 
-    def "CoerceToType Unsuitable"() {
+    def "test CoerceToType Unsuitable"() {
         when:
         final TypeCoercionResult constructionResult = TypeCoercion.coerceToType(Book, CONSTRUCTORS, args)
 

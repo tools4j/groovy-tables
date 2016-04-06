@@ -31,7 +31,7 @@ class SimpleTableParser {
         row.doOr(argTwo)
     }
 
-    public static List<Row> asListOfRows(Closure tableData) {
+    public static List<Row> createListOfRows(Closure tableData) {
         context.set([])
         use(OrDelegate) {
             tableData.delegate = new PropertyVarConvertor()
@@ -41,8 +41,8 @@ class SimpleTableParser {
         context.get()
     }
 
-    public static List<Object[]> asListOfArrays(Closure tableData) {
-        final List<Row> rows = asListOfRows(tableData)
+    public static List<Object[]> createListOfArrays(Closure tableData) {
+        final List<Row> rows = createListOfRows(tableData)
         rows.collect { Row row -> row.asArray() }
     }
 }

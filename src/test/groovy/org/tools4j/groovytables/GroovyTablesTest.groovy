@@ -14,30 +14,50 @@ import spock.lang.Specification
  * Date: 11/02/2016
  * Time: 6:39 AM
  */
-class CreateFromTableTest extends Specification {
+class GroovyTablesTest extends Specification {
 
-    def "CreateTable with lists"() {
+    def "test createListOf simple"() {
+        when:
+
+        def books = GroovyTables.createListOf(Book.class).fromTable {
+            author         | title                  | cost  | year
+            "Terry Denton" | "Gasp"                 | 15.50 | 1990
+            "Terry Denton" | "Flying Man"           | 15.23 | 1991
+            "Terry Denton" | "Felix and Alexander"  |   0.0 | 1992
+            "Terry Denton" | "Spooner or Later"     |  0.50 | 1993
+            "Terry Denton" | "12 Storey Treehouse"  |     3 | 1994
+            "Terry Denton" | "Gasp"                 |     5 | 1995
+        }
+
+        then:
+        assert books != null;
+        assert books.size() == 6;
+        assert books.count {it.author == "Terry Denton"} == 6
+        assert books.count {it.title == "Gasp"} == 2
+    }
+    
+    def "test createListOf with lists"() {
         given:
-        def books1 = CreateFromTable.createListOf(Book.class).fromTable {
+        def books1 = GroovyTables.createListOf(Book.class).fromTable {
             author         | title                  | cost  | year
             "Terry Denton" | "Gasp"                 | 15.50 | 1990
             "Terry Denton" | "Flying Man"           | 15.23 | 1991
         }
 
-        def books2 = CreateFromTable.createListOf(Book.class).fromTable {
+        def books2 = GroovyTables.createListOf(Book.class).fromTable {
             author         | title                  | cost  | year
             "Terry Denton" | "Felix and Alexander"  |   0.0 | 1992
             "Terry Denton" | "Spooner or Later"     |  0.50 | 1993
         }
 
-        def books3 = CreateFromTable.createListOf(Book.class).fromTable {
+        def books3 = GroovyTables.createListOf(Book.class).fromTable {
             author         | title                  | cost  | year
             "Terry Denton" | "12 Storey Treehouse"  |     3 | 1994
             "Terry Denton" | "Gasp"                 |     5 | 1995
         }
 
         when:
-        def bookshelves = CreateFromTable.createListOf(Bookshelf).fromTable {
+        def bookshelves = GroovyTables.createListOf(Bookshelf).fromTable {
             bookshelfOwner  | title
             "Ben Warner"    | books1
             "Beno Warner"   | books2
@@ -48,9 +68,9 @@ class CreateFromTableTest extends Specification {
         assert bookshelves.size() == 3;
     }
 
-    def "CreateTable with array"() {
+    def "test createListOf with array"() {
         when:
-        List<QuoteHistory> history = CreateFromTable.createListOf(QuoteHistory).fromTable {
+        List<QuoteHistory> history = GroovyTables.createListOf(QuoteHistory).fromTable {
             symbol    | side      | prices
             "AUD/USD" | Side.BUY  | [15.50, 15.51, 15.52, 15.53 ]
             "GBP/USD" | Side.BUY  | [ 10.02, 10.01, 10.02, 10.05, 10.06 ]
@@ -70,9 +90,9 @@ class CreateFromTableTest extends Specification {
         assert history.get(1).prices == [ 10.02, 10.01, 10.02, 10.05, 10.06 ] as double[]
     }
 
-    def "CreateTable with list"() {
+    def "test createListOf with list"() {
         when:
-        List<QuoteHistoryUsingList> history = CreateFromTable.createListOf(QuoteHistoryUsingList).fromTable {
+        List<QuoteHistoryUsingList> history = GroovyTables.createListOf(QuoteHistoryUsingList).fromTable {
             symbol    | side      | prices
             "AUD/USD" | Side.BUY  | [ 15.50, 15.51, 15.52, 15.53 ]
             "GBP/USD" | Side.BUY  | [ 10.02, 10.01, 10.02, 10.05, 10.06 ]
@@ -92,25 +112,20 @@ class CreateFromTableTest extends Specification {
         assert history.get(1).prices == [ 10.02, 10.01, 10.02, 10.05, 10.06 ] as List<Double>
     }
 
-
-    def "CreateTable_usingChainedMethod"() {
+    def "test createListOf includingNestedClassAndGenerics"() {
         when:
-
-        def books = CreateFromTable.createListOf(Book.class).fromTable {
-            author         | title                  | cost  | year
-            "Terry Denton" | "Gasp"                 | 15.50 | 1990
-            "Terry Denton" | "Flying Man"           | 15.23 | 1991
-            "Terry Denton" | "Felix and Alexander"  |   0.0 | 1992
-            "Terry Denton" | "Spooner or Later"     |  0.50 | 1993
-            "Terry Denton" | "12 Storey Treehouse"  |     3 | 1994
-            "Terry Denton" | "Gasp"                 |     5 | 1995
+        final List<Receipt<Book>> receipts = GroovyTables.createListOf(Receipt.class).fromTable {
+            new Book("Terry Denton", "Gasp"                , 15.50, 1990) | PaymentMethod.CARD
+            new Book("Terry Denton", "Flying Man"          , 15.23, 1991) | PaymentMethod.CASH
+            new Book("Terry Denton", "Felix and Alexander" ,   0.0, 1992) | PaymentMethod.CARD
+            new Book("Terry Denton", "Spooner or Later"    ,  0.50, 1993) | PaymentMethod.CARD
+            new Book("Terry Denton", "12 Storey Treehouse" ,     3, 1994) | PaymentMethod.CASH
+            new Book("Terry Denton", "Gasp"                ,     5, 1995) | PaymentMethod.CASH
         }
 
         then:
-        assert books != null;
-        assert books.size() == 6;
-        assert books.count {it.author == "Terry Denton"} == 6
-        assert books.count {it.title == "Gasp"} == 2
+        assert receipts.size() == 6;
+        assert receipts.count {it.product.author == "Terry Denton"} == 6
     }
 
     enum PaymentMethod{
@@ -126,22 +141,5 @@ class CreateFromTableTest extends Specification {
             this.product = product
             this.paymentMethod = paymentMethod
         }
-    }
-
-
-    def "CreateTable_includingNestedClassAndGenerics"() {
-        when:
-        final List<Receipt<Book>> receipts = CreateFromTable.createListOf(Receipt.class).fromTable {
-            new Book("Terry Denton", "Gasp"                , 15.50, 1990) | PaymentMethod.CARD
-            new Book("Terry Denton", "Flying Man"          , 15.23, 1991) | PaymentMethod.CASH
-            new Book("Terry Denton", "Felix and Alexander" ,   0.0, 1992) | PaymentMethod.CARD
-            new Book("Terry Denton", "Spooner or Later"    ,  0.50, 1993) | PaymentMethod.CARD
-            new Book("Terry Denton", "12 Storey Treehouse" ,     3, 1994) | PaymentMethod.CASH
-            new Book("Terry Denton", "Gasp"                ,     5, 1995) | PaymentMethod.CASH
-        }
-
-        then:
-        assert receipts.size() == 6;
-        assert receipts.count {it.product.author == "Terry Denton"} == 6
     }
 }
