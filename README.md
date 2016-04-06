@@ -104,7 +104,13 @@ A construction method is selected separately for each 'line' of the table.  In t
 ##How to use
 ###Gradle
 ```
-testCompile group: 'org.tools4j', name: 'groovy-tables', version: '1.0'
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'org.tools4j', name: 'groovy-tables', version: '1.1'
+}
 ```
 ###Maven
 ```
