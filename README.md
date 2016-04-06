@@ -91,7 +91,7 @@ There are three methods of construction.  Class Constructors, Static Factory Met
   
 1. Class Constructors - The API takes constructors as a preference compared to the other two methods.  The API will look at each constructor and will compare the parameters of the constructor, with the given arguments.  If the given arguments can be coerced into the list of parameters in the constructor, then that constructor is deemed a candidate.
 2. Static Factory Methods - The API first builds a list of static class methods, which return a type which matches the class we are constructing.  Then, the same as for contructors, the method's parameters are compared with the given arguments to discover matches.
-3. Reflection - The API will first look to see if a zero arg constructor exists.  If it does, it will then see if a suitable setter exists for each argument given (this is why field names are required when the Reflection method is used).  If a setter cannot be found, then the API checks whether a field can be accessed directly.
+3. Reflection - The API will first look to see if a zero arg constructor exists.  If it does, it will then see if a suitable setter exists for each argument given (this is why field names are required when the Reflection method is used).  If a setter cannot be found for a field, then the API checks whether a field can be accessed directly.  Once it has confirmed that each column has a corresponding field that can be accessed, reflection is deemed a construction candidate.
 
 ####How a construction method is selected
 Suitable construction methods are analyzed before construction takes place.  A decision is then made regarding the most suitable construction method.  This decision is made based on:
