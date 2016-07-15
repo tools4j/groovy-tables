@@ -46,7 +46,7 @@ List<Quote> quotes = GroovyTables.createListOf(Quote).fromTable {
 ```
 By default groovytabledsl finds a suitable constructor or static factory method to create instances of the given class.  You can give the api a filter to 'force' a certain mode of construction.  This example passes a filter which only accepts constructors. e.g.
 ```
-List<Book> books = GroovyTables.createFromTable(Book.class, ConstructionMethodFilter.CONSTRUCTORS, {
+List<Book> books = CreateFromTable.createFromTable(Book.class, ConstructionMethodFilter.CONSTRUCTORS, {
     author                | title                    | cost  | year
     "Jane Austen"         | "Pride and Prejudice"    | 12.95 | 1813
     "Harper Lee"          | "To Kill a Mockingbird"  | 14.95 | 1960
@@ -59,7 +59,7 @@ List<Book> books = GroovyTables.createFromTable(Book.class, ConstructionMethodFi
 ```
 The filter is a just a Predicate<ConstructionMethod> so you are free to create your own filters.  The ConstructionMethodFilter also provides some method handy 'chainable' methods to help build filters.
 ```
-List<Book> books = GroovyTables.createFromTable(Book.class, ConstructionMethodFilter.filter().withStaticFactoryMethods().withName("create"), {
+List<Book> books = CreateFromTable.createFromTable(Book.class, ConstructionMethodFilter.filter().withStaticFactoryMethods().withName("create"), {
     author                | title                    | cost  | year
     "Jane Austen"         | "Pride and Prejudice"    | 12.95 | 1813
     "Harper Lee"          | "To Kill a Mockingbird"  | 14.95 | 1960
