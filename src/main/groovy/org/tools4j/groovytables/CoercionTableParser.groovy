@@ -12,7 +12,7 @@ import static org.tools4j.groovytables.SimpleTableParser.Var
  * Time: 5:46 PM
  */
 @TypeChecked
-class CreateFromTable {
+class CoercionTableParser {
     protected static <T> List<T> createFromTable(final Class<T> clazz, final Closure tableContent) {
         return createFromTable(clazz, ConstructionMethodFilter.INCLUDE_ALL, tableContent)
     }

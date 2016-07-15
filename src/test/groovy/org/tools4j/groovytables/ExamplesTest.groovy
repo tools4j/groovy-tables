@@ -12,7 +12,7 @@ class ExamplesTest extends Specification {
 
     def "create list of books"() {
         when:
-        List<Book> books = CreateFromTable.createListOf(Book.class).fromTable {
+        List<Book> books = GroovyTables.createListOf(Book.class).fromTable {
             author                | title                    | cost  | year
             "Jane Austen"         | "Pride and Prejudice"    | 12.95 | 1813
             "Harper Lee"          | "To Kill a Mockingbird"  | 14.95 | 1960
@@ -45,12 +45,12 @@ class ExamplesTest extends Specification {
     }
 
     private List<Book> books(Closure closure){
-        return CreateFromTable.createListOf(Book.class).fromTable(closure)
+        return GroovyTables.createListOf(Book.class).fromTable(closure)
     }
 
     def "create list of quotes"() {
         when:
-        List<Quote> quotes = CreateFromTable.createListOf(Quote).fromTable {
+        List<Quote> quotes = GroovyTables.createListOf(Quote).fromTable {
             symbol    | price   | quantity
             "AUD/USD" | 1.0023  | 1200000
             "AUD/USD" | 1.0024  | 1400000
@@ -64,7 +64,7 @@ class ExamplesTest extends Specification {
 
     def "create list of books - using constructor only"() {
         when:
-        List<Book> books = CreateFromTable.createFromTable(Book.class, ConstructionMethodFilter.CONSTRUCTORS, {
+        List<Book> books = GroovyTables.createFromTable(Book.class, ConstructionMethodFilter.CONSTRUCTORS, {
             author                | title                    | cost  | year
             "Jane Austen"         | "Pride and Prejudice"    | 12.95 | 1813
             "Harper Lee"          | "To Kill a Mockingbird"  | 14.95 | 1960
@@ -81,7 +81,7 @@ class ExamplesTest extends Specification {
 
     def "create list of books - using static factory methods with given name"() {
         when:
-        List<Book> books = CreateFromTable.createFromTable(Book.class, ConstructionMethodFilter.filter().withStaticFactoryMethods().withName("create"), {
+        List<Book> books = GroovyTables.createFromTable(Book.class, ConstructionMethodFilter.filter().withStaticFactoryMethods().withName("create"), {
             author                | title                    | cost  | year
             "Jane Austen"         | "Pride and Prejudice"    | 12.95 | 1813
             "Harper Lee"          | "To Kill a Mockingbird"  | 14.95 | 1960
@@ -96,4 +96,49 @@ class ExamplesTest extends Specification {
         assert books.size() == 7
     }
 
+
+    def "data to xml"() {
+        when:
+        def xml = toXml {
+            a | b | c
+            1 | 3 | 3
+            7 | 4 | 4
+            0 | 0 | 0
+        }
+        println xml
+
+
+        then:
+        assert xml ==   "<row>\n" +
+                        "    <a>1</a>\n" +
+                        "    <b>3</b>\n" +
+                        "    <c>3</c>\n" +
+                        "</row>\n" +
+                        "<row>\n" +
+                        "    <a>7</a>\n" +
+                        "    <b>4</b>\n" +
+                        "    <c>4</c>\n" +
+                        "</row>\n" +
+                        "<row>\n" +
+                        "    <a>0</a>\n" +
+                        "    <b>0</b>\n" +
+                        "    <c>0</c>\n" +
+                        "</row>\n"
+    }
+
+    private String toXml(Closure closure) {
+        List<Object[]> rows = GroovyTables.createListOfArrays(closure)
+        Iterator<Object[]> rowsIterator = rows.iterator()
+        Object[] headingRow = rowsIterator.next()
+        StringBuilder sb = new StringBuilder()
+        while (rowsIterator.hasNext()) {
+            Object[] row = rowsIterator.next()
+            sb.append("<row>\n")
+            for (int i = 0; i < row.length; i++) {
+                sb.append("    <${headingRow[i].name}>${row[i]}</${headingRow[i].name}>\n")
+            }
+            sb.append("</row>\n")
+        }
+        return sb.toString()
+    }
 }
