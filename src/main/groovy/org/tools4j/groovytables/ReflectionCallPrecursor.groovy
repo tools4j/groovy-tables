@@ -8,22 +8,22 @@ import groovy.transform.ToString
  * Time: 5:45 PM
  */
 @ToString
-class ReflectionConstructionMethodPrecursor<T> implements ConstructionMethodPrecursor<T>{
+class ReflectionCallPrecursor<T> implements CallPrecursor<TypeCoercionResult<T>>{
     final Suitability suitability;
     final Object[] rawArgs;
-    final ReflectionConstructionMethod<T> constructionMethod
+    final ReflectionConstructionCall<T> constructionMethod
     final List<FieldSetPrecursor<T>> fieldSetPrecursors
 
-    final static NOT_SUITABLE = new ReflectionConstructionMethodPrecursor(Suitability.NOT_SUITABLE, null, null, null);
+    final static NOT_SUITABLE = new ReflectionCallPrecursor(Suitability.NOT_SUITABLE, null, null, null);
 
-    ReflectionConstructionMethodPrecursor(final Suitability suitability, final Object[] rawArgs, final ReflectionConstructionMethod<T> constructionMethod, List<FieldSetPrecursor> fieldSetPrecursors) {
+    ReflectionCallPrecursor(final Suitability suitability, final Object[] rawArgs, final ReflectionConstructionCall<T> constructionMethod, List<FieldSetPrecursor> fieldSetPrecursors) {
         this.suitability = suitability
         this.rawArgs = rawArgs
         this.constructionMethod = constructionMethod
         this.fieldSetPrecursors = fieldSetPrecursors
     }
 
-    TypeCoercionResult<T> executeConstructionMethod() {
+    TypeCoercionResult<T> executeMethod() {
         return new TypeCoercionResult<T>(constructionMethod.construct(fieldSetPrecursors), suitability, constructionMethod);
     }
 }

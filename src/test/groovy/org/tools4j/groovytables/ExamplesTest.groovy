@@ -62,6 +62,51 @@ class ExamplesTest extends Specification {
         assert quotes.size() == 4
     }
 
+    def "create list of quotes - using withTableExecute and closure args"() {
+        when:
+        QuoteBook quoteBook = new QuoteBook()
+
+        GroovyTables.withTable {
+            Side.BUY  | "AUD/USD" | 1.0023  | 1200000
+            Side.BUY  | "AUD/USD" | 1.0022  | 1400000
+            Side.BUY  | "AUD/USD" | 1.0020  | 2000000
+            Side.BUY  | "AUD/USD" | 1.0019  | 5000000
+            Side.SELL | "AUD/USD" | 1.0025  | 1100000
+            Side.SELL | "AUD/USD" | 1.0026  | 1600000
+            Side.SELL | "AUD/USD" | 1.0028  | 2020000
+
+        }.execute { Side side, String symbol, double price, int qty ->
+            quoteBook.getSide(side).add(new Quote(symbol: symbol, price: price, quantity: qty))
+        }
+
+        then:
+        assert quoteBook.bids.size() == 4
+        assert quoteBook.asks.size() == 3
+    }
+
+    def "create list of quotes - using withTableExecute and column headings"() {
+        when:
+        QuoteBook quoteBook = new QuoteBook()
+
+        GroovyTables.withTable {
+            side      | symbol    | price   | qty
+            Side.BUY  | "AUD/USD" | 1.0023  | 1200000
+            Side.BUY  | "AUD/USD" | 1.0022  | 1400000
+            Side.BUY  | "AUD/USD" | 1.0020  | 2000000
+            Side.BUY  | "AUD/USD" | 1.0019  | 5000000
+            Side.SELL | "AUD/USD" | 1.0025  | 1100000
+            Side.SELL | "AUD/USD" | 1.0026  | 1600000
+            Side.SELL | "AUD/USD" | 1.0028  | 2020000
+
+        }.execute {
+            quoteBook.getSide(side).add(new Quote(symbol: symbol, price: price, quantity: qty))
+        }
+
+        then:
+        assert quoteBook.bids.size() == 4
+        assert quoteBook.asks.size() == 3
+    }
+
     def "create list of books - using constructor only"() {
         when:
         List<Book> books = GroovyTables.createFromTable(Book.class, ConstructionMethodFilter.CONSTRUCTORS, {
@@ -105,8 +150,6 @@ class ExamplesTest extends Specification {
             7 | 4 | 4
             0 | 0 | 0
         }
-        println xml
-
 
         then:
         assert xml ==   "<row>\n" +

@@ -11,11 +11,11 @@ import java.lang.reflect.Modifier
  * Time: 5:26 PM
  */
 
-class ReflectionConstructionMethod<T> implements ConstructionMethod<T>{
+class ReflectionConstructionCall<T> implements Callable<T>{
     final Class<T> clazz
     final Constructor<T> zeroArgConstructor;
 
-    ReflectionConstructionMethod(final Class<T> clazz) {
+    ReflectionConstructionCall(final Class<T> clazz) {
         this.clazz = clazz
         this.zeroArgConstructor = getZeroArgConstructor()
     }
@@ -31,26 +31,26 @@ class ReflectionConstructionMethod<T> implements ConstructionMethod<T>{
     }
 
     @Override
-    ReflectionConstructionMethodPrecursor<T> getConstructionMethodPrecursor(final Object... rawArgs) {
+    ReflectionCallPrecursor<T> getCallPrecursor(final Object... rawArgs) {
         throw new UnsupportedOperationException("Method not supported.  Please use method of the same name, but with columnHeadings being passed.")
     }
 
     @Override
-    ReflectionConstructionMethodPrecursor<T> getConstructionMethodPrecursor(final List<String> fieldNames, final Object... rawArgs) {
+    ReflectionCallPrecursor<T> getCallPrecursor(final List<String> fieldNames, final Object... rawArgs) {
         Logger.info("    Getting reflection based CreationMethodPrecursor for class $clazz")
 
         if(fieldNames.isEmpty()){
-            return new ReflectionConstructionMethodPrecursor(Suitability.NOT_SUITABLE, rawArgs, null, null)
+            return new ReflectionCallPrecursor(Suitability.NOT_SUITABLE, rawArgs, null, null)
         }
 
         if(fieldNames.size() != rawArgs.length){
             Logger.info("        Mismatched number of columnHeadings, columnHeadings:${fieldNames.size()} != args:$rawArgs.length")
-            return new ReflectionConstructionMethodPrecursor<T>(Suitability.NOT_SUITABLE, rawArgs, null, null)
+            return new ReflectionCallPrecursor<T>(Suitability.NOT_SUITABLE, rawArgs, null, null)
         }
 
         if(zeroArgConstructor == null){
             Logger.info("        No zero-arg constructor found")
-            return new ReflectionConstructionMethodPrecursor(Suitability.NOT_SUITABLE, rawArgs, null, null)
+            return new ReflectionCallPrecursor(Suitability.NOT_SUITABLE, rawArgs, null, null)
         }
 
         Suitability worstSuitability = Suitability.SUITABLE;
@@ -59,14 +59,14 @@ class ReflectionConstructionMethod<T> implements ConstructionMethod<T>{
             final String fieldName = fieldNames.get(i)
             FieldSetPrecursor<T> mostSuitableSetMethod = getMostSuitableFieldSetMethod(clazz, fieldName, rawArgs[i])
             if (mostSuitableSetMethod.suitability == Suitability.NOT_SUITABLE) {
-                return ReflectionConstructionMethodPrecursor.NOT_SUITABLE
+                return ReflectionCallPrecursor.NOT_SUITABLE
             } else {
                 worstSuitability = worstSuitability.worseOf(mostSuitableSetMethod.suitability)
                 fieldSetMethods.add(mostSuitableSetMethod)
             }
         }
 
-        return new ReflectionConstructionMethodPrecursor(
+        return new ReflectionCallPrecursor(
                 worstSuitability,
                 rawArgs,
                 this,
@@ -116,7 +116,7 @@ class ReflectionConstructionMethod<T> implements ConstructionMethod<T>{
                 Logger.info("        Field: $fieldName[${arg.class.getSimpleName()}]: Found suitable setter $method.name.  Can be up-casted to type $parameterClass.simpleName")
                 setter = new FieldSetPrecursor<>(Suitability.SUITABLE_BY_UP_CASTING, arg, new FieldSetMethodViaSetter(method))
             } else {
-                final ValueCoercionResult valueCoercionResult = ValueCoersion.coerceToType(arg, parameterClass)
+                final ValueCoercionResult valueCoercionResult = ValueCoerser.coerceToType(arg, parameterClass)
                 final String argClass = arg == null ? "null" : arg.class.simpleName
                 Logger.info("        Field: $fieldName[${argClass}]: Setter $method.name.  Coercion result to:$parameterClass.simpleName: $valueCoercionResult")
                 setter = new FieldSetPrecursor<>(valueCoercionResult.suitability, valueCoercionResult.result, new FieldSetMethodViaSetter(method))
@@ -155,7 +155,7 @@ class ReflectionConstructionMethod<T> implements ConstructionMethod<T>{
             Logger.info("        Field: $fieldName[${arg.class.getSimpleName()}]: Found suitable direct field access.  Arg type can be up-cast to $field.type.simpleName")
             return new FieldSetPrecursor<>(Suitability.SUITABLE_BY_UP_CASTING, arg, new FieldSetMethodViaDirectFieldAccess(field))
         } else {
-            final ValueCoercionResult valueCoercionResult = ValueCoersion.coerceToType(arg, field.getType())
+            final ValueCoercionResult valueCoercionResult = ValueCoerser.coerceToType(arg, field.getType())
             Logger.info("        Field: $fieldName[${arg.class.getSimpleName()}]: Coercion result for field $field.type.simpleName: $valueCoercionResult")
             return new FieldSetPrecursor<>(valueCoercionResult.suitability, valueCoercionResult.result, new FieldSetMethodViaDirectFieldAccess(field))
         }

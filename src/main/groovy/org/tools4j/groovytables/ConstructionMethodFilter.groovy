@@ -7,7 +7,7 @@ import java.util.function.Predicate
  * Date: 7/03/2016
  * Time: 5:50 PM
  */
-class ConstructionMethodFilter implements Predicate<ConstructionMethod> {
+class ConstructionMethodFilter implements Predicate<Callable> {
     private final List<Closure<Boolean>> predicates
     final static ConstructionMethodFilter CONSTRUCTORS = filter().withConstructors().toUnmodifiable()
     final static ConstructionMethodFilter STATIC_FACTORY_METHODS = filter().withStaticFactoryMethods().toUnmodifiable()
@@ -26,7 +26,7 @@ class ConstructionMethodFilter implements Predicate<ConstructionMethod> {
         this.predicates = predicates
     }
 
-    public Collection<ConstructionMethod> apply(Collection<ConstructionMethod> collection){
+    public Collection<Callable> apply(Collection<Callable> collection){
         return collection.findAll{this.test(it)}
     }
 
@@ -35,22 +35,22 @@ class ConstructionMethodFilter implements Predicate<ConstructionMethod> {
     }
 
     ConstructionMethodFilter withConstructors(){
-        with{it instanceof ClassConstructor}
+        with{it instanceof ClassConstructorConstructionCall}
         return this
     }
 
     ConstructionMethodFilter withStaticFactoryMethods(){
-        with{it instanceof StaticFactoryMethod}
+        with{it instanceof StaticFactoryMethodConstructionCall}
         return this
     }
 
     ConstructionMethodFilter withReflection(){
-        with{it instanceof ReflectionConstructionMethod}
+        with{it instanceof ReflectionConstructionCall}
         return this
     }
 
     ConstructionMethodFilter withName(final String name){
-        with{it instanceof ExecutableConstructionMethod && it.executable.name == name}
+        with{it instanceof ExecutableConstructionCall && it.executable.name == name}
         return this
     }
 
@@ -60,7 +60,7 @@ class ConstructionMethodFilter implements Predicate<ConstructionMethod> {
     }
 
     @Override
-    boolean test(final ConstructionMethod constructionMethod) {
+    boolean test(final Callable constructionMethod) {
         for(final Closure<Boolean> predicate: predicates){
             if(!predicate(constructionMethod)){
                 return false;

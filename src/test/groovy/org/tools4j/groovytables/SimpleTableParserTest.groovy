@@ -30,7 +30,6 @@ class SimpleTableParserTest extends Specification {
         assertActualEqualsExpected(listOfArrays.get(3), [(int) 55, (int) 5, (int) 60] as Object[])
     }
 
-
     def "test simple createListOfArrays"() {
         when:
         final List<Object[]> listOfArrays = GroovyTables.createListOfArrays {
@@ -46,7 +45,65 @@ class SimpleTableParserTest extends Specification {
         assertActualEqualsExpected(listOfArrays.get(2), [(int) 55, (int) 5, (int) 60] as Object[])
     }
 
+    def "test createRows with var headings"() {
+        when:
+        final Rows rows = GroovyTables.createRows {
+            one | two   | three
+            1   | 2     | 3
+            2   | 3     | 5
+            55  | 5     | 60
+        }
 
+        then:
+        assert rows.size() == 3
+        assert rows.getColumnHeadings() == ["one", "two", "three"] as List
+        assert rows.get(1), new Row([(int) 1, (int) 2, (int) 3])
+        assert rows.get(1), new Row([(int) 2, (int) 3, (int) 5])
+        assert rows.get(1), new Row([(int) 55, (int) 5, (int) 60])
+        assert !rows.isEmpty()
+        assert rows.hasColumnHeadings()
+    }
+
+    def "test createRows with no var headings"() {
+        when:
+        final Rows rows = GroovyTables.createRows {
+            1   | 2     | 3
+            2   | 3     | 5
+            55  | 5     | 60
+        }
+
+        then:
+        assert rows.size() == 3
+        assert rows.get(1), new Row([(int) 1, (int) 2, (int) 3])
+        assert rows.get(1), new Row([(int) 2, (int) 3, (int) 5])
+        assert rows.get(1), new Row([(int) 55, (int) 5, (int) 60])
+        assert !rows.isEmpty()
+        assert !rows.hasColumnHeadings()
+    }
+
+    def "test createRows with just var headings"() {
+        when:
+        final Rows rows = GroovyTables.createRows {
+            one | two   | three
+        }
+
+        then:
+        assert rows.size() == 0
+        assert rows.getColumnHeadings() == ["one", "two", "three"] as List
+        assert rows.isEmpty()
+        assert rows.hasColumnHeadings()
+    }
+
+    def "test createRows with empty input"() {
+        when:
+        final Rows rows = GroovyTables.createRows {
+        }
+
+        then:
+        assert rows.size() == 0
+        assert rows.isEmpty()
+        assert !rows.hasColumnHeadings()
+    }
 
     def "test createListOfArrays with different types"() {
         given:

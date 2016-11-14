@@ -17,8 +17,8 @@ class StaticFactoryMethodCoercionTest extends Specification {
     @Unroll
     def "test GetConstructionPrecursor"() {
         expect:
-        StaticFactoryMethod staticFactoryMethod = new StaticFactoryMethod(Book.getMethod("create", String, Double, long))
-        ExecutableConstructionMethodPrecursor constructionPrecursor = staticFactoryMethod.getConstructionMethodPrecursor(rawArgs)
+        StaticFactoryMethodConstructionCall staticFactoryMethod = new StaticFactoryMethodConstructionCall(Book.getMethod("create", String, Double, long))
+        ExecutableCallPrecursor constructionPrecursor = staticFactoryMethod.getCallPrecursor(rawArgs)
         assert constructionPrecursor.suitability == suitability
         assertActualEqualsExpected(constructionPrecursor.coercedArgs, coercedArgs)
 
@@ -32,9 +32,9 @@ class StaticFactoryMethodCoercionTest extends Specification {
 
     def "test GetConstructionPrecursor then execute staticFactoryMethod"() {
         when:
-        StaticFactoryMethod staticFactoryMethod = new StaticFactoryMethod(Book.getMethod("create", String, Double, long))
-        ConstructionMethodPrecursor constructionPrecursor = staticFactoryMethod.getConstructionMethodPrecursor("Power of One", 19.95d, 123456L)
-        final Book actualBook = (Book) constructionPrecursor.executeConstructionMethod().result
+        StaticFactoryMethodConstructionCall staticFactoryMethod = new StaticFactoryMethodConstructionCall(Book.getMethod("create", String, Double, long))
+        CallPrecursor<TypeCoercionResult<Book>> constructionPrecursor = staticFactoryMethod.getCallPrecursor("Power of One", 19.95d, 123456L)
+        final Book actualBook = (Book) constructionPrecursor.executeMethod().result
         final Book expectedBook = new Book("Power of One", 19.95, 123456)
 
         then:
@@ -45,7 +45,7 @@ class StaticFactoryMethodCoercionTest extends Specification {
     @Unroll
     def "test CoerceToType Suitable"() {
         when:
-        final TypeCoercionResult constructionResult = TypeCoercion.coerceToType(Book, STATIC_FACTORY_METHODS, args)
+        final TypeCoercionResult constructionResult = TypeCoercer.coerceToType(Book, STATIC_FACTORY_METHODS, args)
         final Book actualBook = (Book) constructionResult.result
 
         then:
@@ -64,7 +64,7 @@ class StaticFactoryMethodCoercionTest extends Specification {
     @Unroll
     def "test CoerceToType Unsuitable"() {
         when:
-        final TypeCoercionResult constructionResult = TypeCoercion.coerceToType(Book, STATIC_FACTORY_METHODS, args)
+        final TypeCoercionResult constructionResult = TypeCoercer.coerceToType(Book, STATIC_FACTORY_METHODS, args)
 
         then:
         assert constructionResult.suitability == NOT_SUITABLE

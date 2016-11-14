@@ -11,6 +11,12 @@ import groovy.transform.ToString
 class Row {
     List<Object> values = []
 
+    Row() {}
+
+    Row(final List<Object> values) {
+        this.values = values
+    }
+
     public Row or(Object arg) {
         return doOr(arg)
     }
@@ -63,5 +69,28 @@ class Row {
 
     public List<Object> asList() {
         return values
+    }
+
+    boolean equals(final o) {
+        if (this.is(o)) return true
+        if (!(o instanceof Row)) return false
+
+        final Row row = (Row) o
+
+        if (values != row.values) return false
+
+        return true
+    }
+
+    int hashCode() {
+        return values.hashCode()
+    }
+
+
+    @Override
+    public String toString() {
+        return "Row{" +
+                "values=" + values +
+                '}';
     }
 }

@@ -1,7 +1,28 @@
 #Groovy Tables
 ##Overview
 Groovy Tables is a groovy library which allows you to create lists of objects using a table like grammar.  It was written primarily for use when writing test cases.
+##How to use
+###Gradle
+```
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'org.tools4j', name: 'groovy-tables', version: '1.3'
+}
+```
+###Maven
+```
+<dependency>
+    <groupId>org.tools4j</groupId>
+    <artifactId>groovy-tables</artifactId>
+    <version>1.2</version>
+    <scope>test</scope>
+</dependency>
+```
 ##Examples
+###Object creation
 The following example creates a list of Book objects
 ```
 List<Book> books = GroovyTables.createListOf(Book.class).fromTable {
@@ -71,7 +92,40 @@ List<Book> books = GroovyTables.createFromTable(Book.class, ConstructionMethodFi
 });
 ```
 The field names (column headings) are only used when the api attempts to call setter methods after constructing an object.  So if field names are omitted, the API will simply not attempt to construct an instance using reflection.
+###Closure chaining
+A new recently added feature, you can chain a closure at the end of the table, to consume the table. e.g.
+```
+GroovyTables.withTable {
+    side      | symbol    | price   | qty
+    Side.BUY  | "AUD/USD" | 1.0023  | 1200000
+    Side.BUY  | "AUD/USD" | 1.0022  | 1400000
+    Side.BUY  | "AUD/USD" | 1.0020  | 2000000
+    Side.BUY  | "AUD/USD" | 1.0019  | 5000000
+    Side.SELL | "AUD/USD" | 1.0025  | 1100000
+    Side.SELL | "AUD/USD" | 1.0026  | 1600000
+    Side.SELL | "AUD/USD" | 1.0028  | 2020000
 
+}.execute {
+    quoteBook.getSide(side).add(new Quote(symbol: symbol, price: price, quantity: qty))
+}
+```
+There is also the option of calling a chained closure, with explicitly defined closure arguments. (For this you must not specify column headings):
+```
+GroovyTables.withTable {
+    Side.BUY  | "AUD/USD" | 1.0023  | 1200000
+    Side.BUY  | "AUD/USD" | 1.0022  | 1400000
+    Side.BUY  | "AUD/USD" | 1.0020  | 2000000
+    Side.BUY  | "AUD/USD" | 1.0019  | 5000000
+    Side.SELL | "AUD/USD" | 1.0025  | 1100000
+    Side.SELL | "AUD/USD" | 1.0026  | 1600000
+    Side.SELL | "AUD/USD" | 1.0028  | 2020000
+
+}.execute { Side side, String symbol, double price, int qty ->
+    quoteBook.getSide(side).add(new Quote(symbol: symbol, price: price, quantity: qty))
+}
+
+```
+###Simple array creation
 You can also create simple lists of arrays.  e.g.
 ```
 final List<Object[]> listOfArrays = GroovyTables.createListOfArrays {
@@ -86,6 +140,7 @@ Output:
 [[1, 2, 3], [2, 3, 5], [55, 5, 60]]
 
 ```
+##Some details
 ###Methods of construction
 There are three methods of construction.  Class Constructors, Static Factory Methods, and Reflection
   
@@ -101,25 +156,11 @@ Suitable construction methods are analyzed before construction takes place.  A d
 3. Whether any argument coercion is required.  For example, a static factory method whose parameters _exactly_ match the types passed as arguments in the table, will take precedence over a constructor which requires that an Integer argument be cast to a Long constructor parameter.
 
 A construction method is selected separately for each 'line' of the table.  In the future we might cache last used construction methods but initial performance testing deemed little benefit was gained in terms of milliseconds of execution.
-##How to use
-###Gradle
-```
-repositories {
-    mavenCentral()
-}
 
-dependencies {
-    testCompile group: 'org.tools4j', name: 'groovy-tables', version: '1.2'
-}
+###Turning on logging
+If you want to debug/understand what groovy-tables is doing, you can turn logging on.  Logging at the moment just goes to System.out
 ```
-###Maven
-```
-<dependency>
-    <groupId>org.tools4j</groupId>
-    <artifactId>groovy-tables</artifactId>
-    <version>1.2</version>
-    <scope>test</scope>
-</dependency>
+org.tools4j.groovytables.Logger.setCurrentLevel(org.tools4j.groovytables.Logger.Level.DEBUG)
 ```
 ##Acknowledgments
 Thanks to Christian Baranowski whose blog post here: http://tux2323.blogspot.co.uk/2013/04/simple-table-dsl-in-groovy.html, inspired the fancy usage of operator overloading to achieve the table like grammar.

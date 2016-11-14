@@ -5,6 +5,6 @@ package org.tools4j.groovytables;
  * Date: 14/03/2016
  * Time: 6:35 AM
  */
-trait FieldSetMethod<T> {
-    abstract void execute(T object, Object coercedArg)
+interface FieldSetMethod<T> {
+    void execute(T object, Object coercedArg)
 }

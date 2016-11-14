@@ -5,11 +5,11 @@ package org.tools4j.groovytables
  * Date: 16/02/2016
  * Time: 5:23 PM
  */
-trait ConstructionMethodPrecursor<T> {
-    abstract TypeCoercionResult<T> executeConstructionMethod();
+trait CallPrecursor<T> {
     abstract Suitability getSuitability()
+    abstract T executeMethod();
 
-    boolean isMoreSuitableThan(final ConstructionMethodPrecursor other) {
+    boolean isMoreSuitableThan(final CallPrecursor other) {
         return suitability.isMoreSuitableThan(other.suitability)
     }
 }

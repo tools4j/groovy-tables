@@ -17,7 +17,7 @@ class CoercionTableParser {
         return createFromTable(clazz, ConstructionMethodFilter.INCLUDE_ALL, tableContent)
     }
 
-    protected static <T> List<T> createFromTable(final Class<T> clazz, final Predicate<ConstructionMethod> constructionMethodFilter, final Closure tableContent) {
+    protected static <T> List<T> createFromTable(final Class<T> clazz, final Predicate<Callable> constructionMethodFilter, final Closure tableContent) {
         final long startTime = System.currentTimeMillis()
         final List<Row> rows = SimpleTableParser.createListOfRows(tableContent);
         final List<T> rowsAsObjects = new ArrayList<T>(rows.size())
@@ -37,7 +37,7 @@ class CoercionTableParser {
 
         for(final Row row: rows){
             final Object[] args = row.asArray()
-            final TypeCoercionResult<T> coercionResult = TypeCoercion.coerceToType(clazz, constructionMethodFilter, columnHeadings, args)
+            final TypeCoercionResult<T> coercionResult = TypeCoercer.coerceToType(clazz, constructionMethodFilter, columnHeadings, args)
             if(coercionResult.suitability == Suitability.NOT_SUITABLE){
                 throw new IllegalArgumentException("Could not coerce to type [$clazz.simpleName] row with args $args");
             }
@@ -52,13 +52,13 @@ class CoercionTableParser {
 
     protected static class Builder<T>{
         final Class<T> clazz
-        Predicate<ConstructionMethod> constructionMethodFilter = null
+        Predicate<Callable> constructionMethodFilter = null
 
         Builder(final Class<T> clazz) {
             this.clazz = clazz
         }
 
-        Builder withFilter(final Predicate<ConstructionMethod> constructionMethodFilter){
+        Builder withFilter(final Predicate<Callable> constructionMethodFilter){
             if(this.constructionMethodFilter == null){
                 this.constructionMethodFilter = constructionMethodFilter
             } else {

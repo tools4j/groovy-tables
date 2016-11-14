@@ -7,22 +7,24 @@ import java.lang.reflect.Executable;
  * Date: 11/03/2016
  * Time: 9:42 AM
  */
-trait ExecutableConstructionMethod<T> extends ConstructionMethod<T> {
+trait ExecutableConstructionCall<T> implements Callable<T> {
     abstract T construct(Object[] args);
     abstract Executable getExecutable();
 
-    ExecutableConstructionMethodPrecursor<T> getConstructionMethodPrecursor(final List<String> columnHeadings, final Object ... rawArgs){
+    @Override
+    ExecutableCallPrecursor<T> getCallPrecursor(final List<String> columnHeadings, final Object ... rawArgs){
         //column headings are not used so disregard...
-        return getConstructionMethodPrecursor(rawArgs)
+        return getCallPrecursor(rawArgs)
     }
 
-    ExecutableConstructionMethodPrecursor<T> getConstructionMethodPrecursor(final Object ... rawArgs){
+    @Override
+    ExecutableCallPrecursor<T> getCallPrecursor(final Object ... rawArgs){
         final Executable executable = getExecutable()
 
         Logger.info("    Getting CreationMethodPrecursor for exectuable of name $executable.name with args ${executable.parameterTypes.collect{it.simpleName}}")
         if(executable.getParameterCount() != rawArgs.size()){
             Logger.info("        Mismatched number of args, executable:$executable.parameterCount != args:$rawArgs.length")
-            return new ExecutableConstructionMethodPrecursor(Suitability.NOT_SUITABLE, rawArgs, null, null)
+            return new ExecutableCallPrecursor(Suitability.NOT_SUITABLE, rawArgs, null, null)
         } else {
             Logger.info("        Correct number of args: $rawArgs.length")
         }
@@ -31,7 +33,7 @@ trait ExecutableConstructionMethod<T> extends ConstructionMethod<T> {
         for (int i = 0; i < executable.getParameterCount(); i++) {
             final Class constructorParamType = executable.getParameterTypes()[i];
             Object rawArg = rawArgs[i]
-            final ValueCoercionResult coercionResult = ValueCoersion.coerceToType(rawArg, constructorParamType);
+            final ValueCoercionResult coercionResult = ValueCoerser.coerceToType(rawArg, constructorParamType);
             worstSuitabilityOfThisExecutable = worstSuitabilityOfThisExecutable.worseOf(coercionResult.getSuitability())
             Logger.info("        Coercion result for arg:${rawArg.getClass().simpleName}[$rawArg] to:$constructorParamType.simpleName : $coercionResult")
             coercedResults.add(coercionResult);
@@ -39,7 +41,7 @@ trait ExecutableConstructionMethod<T> extends ConstructionMethod<T> {
                 break
             }
         }
-        return new ExecutableConstructionMethodPrecursor(
+        return new ExecutableCallPrecursor(
                 worstSuitabilityOfThisExecutable,
                 rawArgs,
                 coercedResults.collect{it.result}.toArray(),

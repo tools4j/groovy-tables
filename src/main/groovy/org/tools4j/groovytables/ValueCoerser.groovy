@@ -7,7 +7,7 @@ import java.lang.reflect.Array
  * Date: 12/02/2016
  * Time: 6:25 AM
  */
-class ValueCoersion {
+class ValueCoerser {
 
 
     public static ValueCoercionResult coerceToType(final Object value, final Class clazz) {

@@ -10,13 +10,13 @@ import static org.tools4j.groovytables.Suitability.*
  * Date: 12/02/2016
  * Time: 6:38 AM
  */
-class ValueCoersionTest extends Specification {
+class ValueCoerserTest extends Specification {
 
     @Unroll
     def "CoerceToArray"() {
         when:
         ValueCoercionResult expectedResults = new ValueCoercionResult<Object[]>(result, suitability)
-        ValueCoercionResult actualResults = ValueCoersion.coerceToArrayOfGivenType(value, Double)
+        ValueCoercionResult actualResults = ValueCoerser.coerceToArrayOfGivenType(value, Double)
 
         then:
         assert actualResults == expectedResults: "inputValue:$value, inputType:${value.getClass().simpleName}, expectedResult:$result, expectedSuitability:$suitability, actual:$actualResults"
@@ -36,7 +36,7 @@ class ValueCoersionTest extends Specification {
         final Object[][] value = [[2.2d, 2.3d] as Object[], [3.3d, 3.4d] as Object[], [4.4d, 4.5d] as Object[]] as Object[]
 
         when:
-        final ValueCoercionResult<Object[][]> valueCoercionResult = ValueCoersion.coerceToArrayOfGivenType(value, value.class.getComponentType())
+        final ValueCoercionResult<Object[][]> valueCoercionResult = ValueCoerser.coerceToArrayOfGivenType(value, value.class.getComponentType())
 
         then:
         assert valueCoercionResult.suitability == SUITABLE_BY_UP_CASTING
@@ -48,7 +48,7 @@ class ValueCoersionTest extends Specification {
         final Double[][] value = [[2.2d, 2.3d] as Double[], [3.3d, 3.4d] as Double[], [4.4d, 4.5d] as Double[]] as Double[][]
 
         when:
-        final ValueCoercionResult<Double[][]> valueCoercionResult = ValueCoersion.coerceToArrayOfGivenType(value, Double[].class)
+        final ValueCoercionResult<Double[][]> valueCoercionResult = ValueCoerser.coerceToArrayOfGivenType(value, Double[].class)
 
         then:
         assert valueCoercionResult.suitability == SUITABLE
@@ -61,7 +61,7 @@ class ValueCoersionTest extends Specification {
         final List<List> value = [[2.2d, 2.3d], [3.3d, 3.4d], [4.4d, 4.5d]]
 
         when:
-        final ValueCoercionResult<List<List>> valueCoercionResult = ValueCoersion.coerceToListOfGivenType(value, List)
+        final ValueCoercionResult<List<List>> valueCoercionResult = ValueCoerser.coerceToListOfGivenType(value, List)
 
         then:
         assert valueCoercionResult.suitability == SUITABLE_BY_UP_CASTING
@@ -73,7 +73,7 @@ class ValueCoersionTest extends Specification {
         final List<List<Double>> value = [[2.2d, 2.3d], [3.3d, 3.4d], [4.4d, 4.5d]]
 
         when:
-        final ValueCoercionResult<List<List<Double>>> valueCoercionResult = ValueCoersion.coerceToListOfGivenType(value, List)
+        final ValueCoercionResult<List<List<Double>>> valueCoercionResult = ValueCoerser.coerceToListOfGivenType(value, List)
 
         then:
         assert valueCoercionResult.suitability == SUITABLE_BY_UP_CASTING
@@ -102,7 +102,7 @@ class ValueCoersionTest extends Specification {
         final List value = [[2.2d, 2.3d], [3.3d, 3.4d], [4.4d, 4.5d]]
 
         when:
-        final ValueCoercionResult<List> valueCoercionResult = ValueCoersion.coerceToListOfGivenType(value, List)
+        final ValueCoercionResult<List> valueCoercionResult = ValueCoerser.coerceToListOfGivenType(value, List)
 
         then:
         assert valueCoercionResult.suitability == SUITABLE_BY_UP_CASTING
@@ -113,7 +113,7 @@ class ValueCoersionTest extends Specification {
     def "CoerceToList"() {
         when:
         ValueCoercionResult expectedResults = new ValueCoercionResult<List<Double>>(result, suitability)
-        ValueCoercionResult actualResults = ValueCoersion.coerceToListOfGivenType(value, Double)
+        ValueCoercionResult actualResults = ValueCoerser.coerceToListOfGivenType(value, Double)
 
         then:
         assert actualResults == expectedResults: "inputValue:$value, inputType:${value.getClass().simpleName}, expectedResult:$result, expectedSuitability:$suitability, actual:$actualResults"
@@ -131,7 +131,7 @@ class ValueCoersionTest extends Specification {
     def "CoerceToArray ofGivenType"() {
         when:
         ValueCoercionResult expectedResults = new ValueCoercionResult<Object[]>(result, suitability)
-        ValueCoercionResult actualResults = ValueCoersion.coerceToArrayOfGivenType(value, Double)
+        ValueCoercionResult actualResults = ValueCoerser.coerceToArrayOfGivenType(value, Double)
 
         then:
         assert actualResults == expectedResults: "inputValue:$value, inputType:${value.getClass().simpleName}, expectedResult:$result, expectedSuitability:$suitability, actual:$actualResults"
@@ -148,8 +148,8 @@ class ValueCoersionTest extends Specification {
     def "CoerceToString"() {
         when:
         ValueCoercionResult expectedResults = new ValueCoercionResult<String>(result, suitability)
-        ValueCoercionResult actualResults1 = ValueCoersion.coerceToString(value)
-        ValueCoercionResult actualResults2 = ValueCoersion.coerceToType(value, String)
+        ValueCoercionResult actualResults1 = ValueCoerser.coerceToString(value)
+        ValueCoercionResult actualResults2 = ValueCoerser.coerceToType(value, String)
 
         then:
         assert actualResults1 == expectedResults: "inputValue:$value, inputType:${value.getClass().simpleName}, expectedResult:$result, expectedSuitability:$suitability, actual:$actualResults1"
@@ -167,8 +167,8 @@ class ValueCoersionTest extends Specification {
     def "CoerceToGString"() {
         when:
         ValueCoercionResult expectedResults = new ValueCoercionResult<GString>(result, suitability)
-        ValueCoercionResult actualResults1 = ValueCoersion.coerceToGString(value)
-        ValueCoercionResult actualResults2 = ValueCoersion.coerceToType(value, GString)
+        ValueCoercionResult actualResults1 = ValueCoerser.coerceToGString(value)
+        ValueCoercionResult actualResults2 = ValueCoerser.coerceToType(value, GString)
 
         then:
         assert actualResults1 == expectedResults: "inputValue:$value, inputType:${value.getClass().simpleName}, expectedResult:$result, expectedSuitability:$suitability, actual:$actualResults1"
@@ -185,7 +185,7 @@ class ValueCoersionTest extends Specification {
 
     def "CoerceToBooleanWithNull"() {
         when:
-        ValueCoercionResult actualResultsBoolean = ValueCoersion.coerceToBoolean(null)
+        ValueCoercionResult actualResultsBoolean = ValueCoerser.coerceToBoolean(null)
 
         then:
         assert actualResultsBoolean.result == null
@@ -194,7 +194,7 @@ class ValueCoersionTest extends Specification {
 
     def "CoerceToBooleanPrimitiveWithNull"() {
         when:
-        ValueCoercionResult actualResultsBoolean = ValueCoersion.coerceToBooleanPrimitive(null)
+        ValueCoercionResult actualResultsBoolean = ValueCoerser.coerceToBooleanPrimitive(null)
 
         then:
         assert actualResultsBoolean.suitability == NOT_SUITABLE
@@ -206,10 +206,10 @@ class ValueCoersionTest extends Specification {
         when:
         ValueCoercionResult expectedResults = new ValueCoercionResult<Boolean>(result, suitability)
 
-        ValueCoercionResult actualResults1 = ValueCoersion.coerceToBoolean(value)
-        ValueCoercionResult actualResults2 = ValueCoersion.coerceToBooleanPrimitive(value)
-        ValueCoercionResult actualResults3 = ValueCoersion.coerceToType(value, Boolean)
-        ValueCoercionResult actualResults4 = ValueCoersion.coerceToType(value, boolean.class)
+        ValueCoercionResult actualResults1 = ValueCoerser.coerceToBoolean(value)
+        ValueCoercionResult actualResults2 = ValueCoerser.coerceToBooleanPrimitive(value)
+        ValueCoercionResult actualResults3 = ValueCoerser.coerceToType(value, Boolean)
+        ValueCoercionResult actualResults4 = ValueCoerser.coerceToType(value, boolean.class)
 
         then:
         assert actualResults1 == expectedResults: "inputValue:$value, inputType:${value.getClass().simpleName}, expectedResult:$result, expectedSuitability:$suitability, actual:$actualResults1"
@@ -268,7 +268,7 @@ class ValueCoersionTest extends Specification {
 
     def "CoerceToIntegerWithNull"() {
         when:
-        ValueCoercionResult actualResultsInteger = ValueCoersion.coerceToInteger(null)
+        ValueCoercionResult actualResultsInteger = ValueCoerser.coerceToInteger(null)
 
         then:
         assert actualResultsInteger.result == null
@@ -277,7 +277,7 @@ class ValueCoersionTest extends Specification {
 
     def "CoerceToIntPrimitiveWithNull"() {
         when:
-        ValueCoercionResult actualResultsInteger = ValueCoersion.coerceToIntPrimitive(null)
+        ValueCoercionResult actualResultsInteger = ValueCoerser.coerceToIntPrimitive(null)
 
         then:
         assert actualResultsInteger.suitability == NOT_SUITABLE
@@ -289,10 +289,10 @@ class ValueCoersionTest extends Specification {
         when:
         ValueCoercionResult expectedResults = new ValueCoercionResult<Integer>(result, suitability)
 
-        ValueCoercionResult actualResults1 = ValueCoersion.coerceToInteger(value)
-        ValueCoercionResult actualResults2 = ValueCoersion.coerceToIntPrimitive(value)
-        ValueCoercionResult actualResults3 = ValueCoersion.coerceToType(value, Integer)
-        ValueCoercionResult actualResults4 = ValueCoersion.coerceToType(value, int.class)
+        ValueCoercionResult actualResults1 = ValueCoerser.coerceToInteger(value)
+        ValueCoercionResult actualResults2 = ValueCoerser.coerceToIntPrimitive(value)
+        ValueCoercionResult actualResults3 = ValueCoerser.coerceToType(value, Integer)
+        ValueCoercionResult actualResults4 = ValueCoerser.coerceToType(value, int.class)
 
         then:
         assert actualResults1 == expectedResults: "inputValue:$value, inputType:${value.getClass().simpleName}, expectedResult:$result, expectedSuitability:$suitability, actual:$actualResults1"
@@ -342,7 +342,7 @@ class ValueCoersionTest extends Specification {
 
     def "CoerceToLongWithNull"() {
         when:
-        ValueCoercionResult actualResults = ValueCoersion.coerceToInteger(null)
+        ValueCoercionResult actualResults = ValueCoerser.coerceToInteger(null)
 
         then:
         assert actualResults.result == null
@@ -351,7 +351,7 @@ class ValueCoersionTest extends Specification {
 
     def "CoerceToLongPrimitiveWithNull"() {
         when:
-        ValueCoercionResult actualResultsLong = ValueCoersion.coerceToLongPrimitive(null)
+        ValueCoercionResult actualResultsLong = ValueCoerser.coerceToLongPrimitive(null)
 
         then:
         assert actualResultsLong.suitability == NOT_SUITABLE
@@ -363,10 +363,10 @@ class ValueCoersionTest extends Specification {
         when:
         ValueCoercionResult expectedResults = new ValueCoercionResult<Long>(result, suitability)
 
-        ValueCoercionResult actualResults1 = ValueCoersion.coerceToLong(value)
-        ValueCoercionResult actualResults2 = ValueCoersion.coerceToLongPrimitive(value)
-        ValueCoercionResult actualResults3 = ValueCoersion.coerceToType(value, Long)
-        ValueCoercionResult actualResults4 = ValueCoersion.coerceToType(value, long.class)
+        ValueCoercionResult actualResults1 = ValueCoerser.coerceToLong(value)
+        ValueCoercionResult actualResults2 = ValueCoerser.coerceToLongPrimitive(value)
+        ValueCoercionResult actualResults3 = ValueCoerser.coerceToType(value, Long)
+        ValueCoercionResult actualResults4 = ValueCoerser.coerceToType(value, long.class)
 
         then:
         assert actualResults1 == expectedResults: "inputValue:$value, inputType:${value.getClass().simpleName}, expectedResult:$result, expectedSuitability:$suitability, actual:$actualResults1"
@@ -411,7 +411,7 @@ class ValueCoersionTest extends Specification {
 
     def "CoerceToShortWithNull"() {
         when:
-        ValueCoercionResult actualResults = ValueCoersion.coerceToInteger(null)
+        ValueCoercionResult actualResults = ValueCoerser.coerceToInteger(null)
 
         then:
         assert actualResults.result == null
@@ -420,7 +420,7 @@ class ValueCoersionTest extends Specification {
 
     def "CoerceToShortPrimitiveWithNull"() {
         when:
-        ValueCoercionResult actualResultsShort = ValueCoersion.coerceToIntPrimitive(null)
+        ValueCoercionResult actualResultsShort = ValueCoerser.coerceToIntPrimitive(null)
 
         then:
         assert actualResultsShort.suitability == NOT_SUITABLE
@@ -432,10 +432,10 @@ class ValueCoersionTest extends Specification {
         when:
         ValueCoercionResult expectedResults = new ValueCoercionResult<Short>(result, suitability)
 
-        ValueCoercionResult actualResults1 = ValueCoersion.coerceToShort(value)
-        ValueCoercionResult actualResults2 = ValueCoersion.coerceToShortPrimitive(value)
-        ValueCoercionResult actualResults3 = ValueCoersion.coerceToType(value, Short)
-        ValueCoercionResult actualResults4 = ValueCoersion.coerceToType(value, short.class)
+        ValueCoercionResult actualResults1 = ValueCoerser.coerceToShort(value)
+        ValueCoercionResult actualResults2 = ValueCoerser.coerceToShortPrimitive(value)
+        ValueCoercionResult actualResults3 = ValueCoerser.coerceToType(value, Short)
+        ValueCoercionResult actualResults4 = ValueCoerser.coerceToType(value, short.class)
 
         then:
         assert actualResults1 == expectedResults: "inputValue:$value, inputType:${value.getClass().simpleName}, expectedResult:$result, expectedSuitability:$suitability, actual:$actualResults1"
@@ -488,7 +488,7 @@ class ValueCoersionTest extends Specification {
 
     def "CoerceToDoubleWithNull"() {
         when:
-        ValueCoercionResult actualResults = ValueCoersion.coerceToDouble(null)
+        ValueCoercionResult actualResults = ValueCoerser.coerceToDouble(null)
 
         then:
         assert actualResults.result == null
@@ -497,7 +497,7 @@ class ValueCoersionTest extends Specification {
 
     def "CoerceToDoublePrimitiveWithNull"() {
         when:
-        ValueCoercionResult actualResults = ValueCoersion.coerceToDoublePrimitive(null)
+        ValueCoercionResult actualResults = ValueCoerser.coerceToDoublePrimitive(null)
 
         then:
         assert actualResults.suitability == NOT_SUITABLE
@@ -508,10 +508,10 @@ class ValueCoersionTest extends Specification {
         when:
         ValueCoercionResult expectedResults = new ValueCoercionResult<Double>(result, suitability)
 
-        ValueCoercionResult actualResults1 = ValueCoersion.coerceToDouble(value)
-        ValueCoercionResult actualResults2 = ValueCoersion.coerceToDoublePrimitive(value)
-        ValueCoercionResult actualResults3 = ValueCoersion.coerceToType(value, Double)
-        ValueCoercionResult actualResults4 = ValueCoersion.coerceToType(value, double.class)
+        ValueCoercionResult actualResults1 = ValueCoerser.coerceToDouble(value)
+        ValueCoercionResult actualResults2 = ValueCoerser.coerceToDoublePrimitive(value)
+        ValueCoercionResult actualResults3 = ValueCoerser.coerceToType(value, Double)
+        ValueCoercionResult actualResults4 = ValueCoerser.coerceToType(value, double.class)
 
         then:
         assert actualResults1 == expectedResults: "inputValue:$value, inputType:${value.getClass().simpleName}, expectedResult:$result, expectedSuitability:$suitability, actual:$actualResults1"
@@ -555,7 +555,7 @@ class ValueCoersionTest extends Specification {
 
     def "CoerceToFloatWithNull"() {
         when:
-        ValueCoercionResult actualResults = ValueCoersion.coerceToFloat(null)
+        ValueCoercionResult actualResults = ValueCoerser.coerceToFloat(null)
 
         then:
         assert actualResults.result == null
@@ -564,7 +564,7 @@ class ValueCoersionTest extends Specification {
 
     def "CoerceToFloatPrimitiveWithNull"() {
         when:
-        ValueCoercionResult actualResults = ValueCoersion.coerceToFloatPrimitive(null)
+        ValueCoercionResult actualResults = ValueCoerser.coerceToFloatPrimitive(null)
 
         then:
         assert actualResults.suitability == NOT_SUITABLE
@@ -575,10 +575,10 @@ class ValueCoersionTest extends Specification {
         when:
         ValueCoercionResult expectedResults = new ValueCoercionResult<Float>(result, suitability)
 
-        ValueCoercionResult actualResults1 = ValueCoersion.coerceToFloat(value)
-        ValueCoercionResult actualResults2 = ValueCoersion.coerceToFloatPrimitive(value)
-        ValueCoercionResult actualResults3 = ValueCoersion.coerceToType(value, Float)
-        ValueCoercionResult actualResults4 = ValueCoersion.coerceToType(value, float.class)
+        ValueCoercionResult actualResults1 = ValueCoerser.coerceToFloat(value)
+        ValueCoercionResult actualResults2 = ValueCoerser.coerceToFloatPrimitive(value)
+        ValueCoercionResult actualResults3 = ValueCoerser.coerceToType(value, Float)
+        ValueCoercionResult actualResults4 = ValueCoerser.coerceToType(value, float.class)
 
         then:
         assert actualResults1 == expectedResults: "inputValue:$value, inputType:${value.getClass().simpleName}, expectedResult:$result, expectedSuitability:$suitability, actual:$actualResults1"
@@ -631,8 +631,8 @@ class ValueCoersionTest extends Specification {
         when:
         ValueCoercionResult expectedResults = new ValueCoercionResult<BigDecimal>(result, suitability)
 
-        ValueCoercionResult actualResults1 = ValueCoersion.coerceToBigDecimal(value)
-        ValueCoercionResult actualResults2 = ValueCoersion.coerceToType(value, BigDecimal)
+        ValueCoercionResult actualResults1 = ValueCoerser.coerceToBigDecimal(value)
+        ValueCoercionResult actualResults2 = ValueCoerser.coerceToType(value, BigDecimal)
 
         then:
         assert actualResults1 == expectedResults: "inputValue:$value, inputType:${value.getClass().simpleName}, expectedResult:$result, expectedSuitability:$suitability, actual:$actualResults1"

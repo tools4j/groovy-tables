@@ -17,8 +17,8 @@ class ConstructorCoercionTest extends Specification {
     @Unroll
     def "test GetConstructionPrecursor"() {
         expect:
-        ExecutableConstructionMethod constructionMethod = new ClassConstructor(Book.getConstructor(String, Double, long))
-        ExecutableConstructionMethodPrecursor constructionPrecursor = constructionMethod.getConstructionMethodPrecursor([], rawArgs)
+        ExecutableConstructionCall constructionMethod = new ClassConstructorConstructionCall(Book.getConstructor(String, Double, long))
+        ExecutableCallPrecursor constructionPrecursor = constructionMethod.getCallPrecursor([], rawArgs)
         assert constructionPrecursor.suitability == suitability
         assertActualEqualsExpected(constructionPrecursor.coercedArgs, coercedArgs)
 
@@ -32,9 +32,9 @@ class ConstructorCoercionTest extends Specification {
 
     def "test GetConstructionPrecursor then execute constructor"() {
         when:
-        ExecutableConstructionMethod constructionMethod = new ClassConstructor(Book.getConstructor(String, Double, long))
-        ExecutableConstructionMethodPrecursor constructionPrecursor = constructionMethod.getConstructionMethodPrecursor([], "Power of One", 19.95d, 123456L)
-        final Book actualBook = (Book) constructionPrecursor.executeConstructionMethod().result
+        ExecutableConstructionCall constructionMethod = new ClassConstructorConstructionCall(Book.getConstructor(String, Double, long))
+        ExecutableCallPrecursor constructionPrecursor = constructionMethod.getCallPrecursor([], "Power of One", 19.95d, 123456L)
+        final Book actualBook = (Book) constructionPrecursor.executeMethod().result
         final Book expectedBook = new Book("Power of One", 19.95, 123456)
 
         then:
@@ -44,7 +44,7 @@ class ConstructorCoercionTest extends Specification {
 
     def "test CoerceToType Suitable"() {
         when:
-        final TypeCoercionResult constructionResult = TypeCoercion.coerceToType(Book, CONSTRUCTORS, [], args)
+        final TypeCoercionResult constructionResult = TypeCoercer.coerceToType(Book, CONSTRUCTORS, [], args)
         final Book actualBook = (Book) constructionResult.result
 
         then:
@@ -62,7 +62,7 @@ class ConstructorCoercionTest extends Specification {
 
     def "test CoerceToType Unsuitable"() {
         when:
-        final TypeCoercionResult constructionResult = TypeCoercion.coerceToType(Book, CONSTRUCTORS, args)
+        final TypeCoercionResult constructionResult = TypeCoercer.coerceToType(Book, CONSTRUCTORS, args)
 
         then:
         assert constructionResult.suitability == NOT_SUITABLE

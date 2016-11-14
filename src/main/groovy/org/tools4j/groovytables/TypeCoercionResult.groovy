@@ -12,12 +12,12 @@ import groovy.transform.ToString
 @EqualsAndHashCode
 public class TypeCoercionResult<T>{
     final Suitability suitability;
-    final ConstructionMethod constructionMethod
+    final Callable constructionMethod
     final T result;
 
     public static TypeCoercionResult NOT_SUITABLE = new TypeCoercionResult<Void>(null, Suitability.NOT_SUITABLE, null);
 
-    TypeCoercionResult(final T result, final Suitability suitability, final ConstructionMethod constructionMethod) {
+    TypeCoercionResult(final T result, final Suitability suitability, final Callable constructionMethod) {
         this.result = result
         this.suitability = suitability
         this.constructionMethod = constructionMethod

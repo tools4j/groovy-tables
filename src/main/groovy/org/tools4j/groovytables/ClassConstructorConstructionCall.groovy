@@ -12,10 +12,10 @@ import java.lang.reflect.Executable
  */
 
 @ToString
-class ClassConstructor<T> implements ExecutableConstructionMethod<T>{
+class ClassConstructorConstructionCall<T> implements ExecutableConstructionCall<T>{
     final Constructor<T> constructor;
 
-    ClassConstructor(final Constructor<T> constructor) {
+    ClassConstructorConstructionCall(final Constructor<T> constructor) {
         this.constructor = constructor
     }
 

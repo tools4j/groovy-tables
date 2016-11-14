@@ -4,20 +4,20 @@ import org.tools4j.groovytables.model.Book
 import spock.lang.Specification
 import spock.lang.Unroll
 
-import static org.tools4j.groovytables.ConstructionMethodFilter.REFLECTION
-import static org.tools4j.groovytables.ConstructionMethodFilter.getCONSTRUCTORS
+import static org.tools4j.groovytables.ConstructionMethodFilter.*
 import static org.tools4j.groovytables.Suitability.*
+
 
 /**
  * User: ben
  * Date: 16/02/2016
  * Time: 5:45 PM
  */
-class ReflectionConstructionMethodTest extends Specification {
+class ReflectionCallableTest extends Specification {
     @Unroll
     def "test GetSuitableSetterMethod"() {
         expect:
-        ReflectionConstructionMethod reflectionMethod = new ReflectionConstructionMethod<>(Book)
+        ReflectionConstructionCall reflectionMethod = new ReflectionConstructionCall<>(Book)
 
         FieldSetPrecursor fieldSetPrecursor = reflectionMethod.getSuitableSetterMethod( Book, fieldName, arg )
 
@@ -35,7 +35,7 @@ class ReflectionConstructionMethodTest extends Specification {
     @Unroll
     def "test GetSuitableDirectAccessMethod"() {
         expect:
-        ReflectionConstructionMethod reflectionMethod = new ReflectionConstructionMethod<>(Book)
+        ReflectionConstructionCall reflectionMethod = new ReflectionConstructionCall<>(Book)
 
         FieldSetPrecursor fieldSetPrecursor = reflectionMethod.getSuitableDirectFieldAccessMethod( Book, fieldName, arg )
 
@@ -53,7 +53,7 @@ class ReflectionConstructionMethodTest extends Specification {
     @Unroll
     def "test GetMostSuitableFieldSetMethod"() {
         expect:
-        ReflectionConstructionMethod reflectionMethod = new ReflectionConstructionMethod<>(Book)
+        ReflectionConstructionCall reflectionMethod = new ReflectionConstructionCall<>(Book)
 
         FieldSetPrecursor fieldSetPrecursor = reflectionMethod.getMostSuitableFieldSetMethod( Book, fieldName, arg )
 
@@ -72,9 +72,9 @@ class ReflectionConstructionMethodTest extends Specification {
     @Unroll
     def "test GetReflectionPrecursor"() {
         expect:
-        ReflectionConstructionMethod reflectionMethod = new ReflectionConstructionMethod<>(Book)
+        ReflectionConstructionCall reflectionMethod = new ReflectionConstructionCall<>(Book)
 
-        final ReflectionConstructionMethodPrecursor constructionPrecursor = reflectionMethod.getConstructionMethodPrecursor(
+        final ReflectionCallPrecursor constructionPrecursor = reflectionMethod.getCallPrecursor(
                 ["author", "title", "cost", "serialNumber"], "Bryce Courtenay", "Power of One", 19.95, 123456L)
 
         assert constructionPrecursor.suitability == SUITABLE_WITH_EXPECTED_COERCION
@@ -99,12 +99,12 @@ class ReflectionConstructionMethodTest extends Specification {
     @Unroll
     def "test Construct"() {
         expect:
-        ReflectionConstructionMethod reflectionMethod = new ReflectionConstructionMethod<>(Book)
+        ReflectionConstructionCall reflectionMethod = new ReflectionConstructionCall<>(Book)
 
-        final ReflectionConstructionMethodPrecursor constructionPrecursor = reflectionMethod.getConstructionMethodPrecursor(
+        final ReflectionCallPrecursor constructionPrecursor = reflectionMethod.getCallPrecursor(
                 ["author", "title", "cost", "serialNumber"], "Bryce Courtenay", "Power of One", 19.95, 123456L)
 
-        TypeCoercionResult<Book> typeCoercionResult = constructionPrecursor.executeConstructionMethod()
+        TypeCoercionResult<Book> typeCoercionResult = constructionPrecursor.executeMethod()
         with(typeCoercionResult) {
             assert suitability == SUITABLE_WITH_EXPECTED_COERCION
             assert result.author == "Bryce Courtenay"
@@ -117,7 +117,7 @@ class ReflectionConstructionMethodTest extends Specification {
     @Unroll
     def "test CoerceToType Suitable"() {
         when:
-        final TypeCoercionResult constructionResult = TypeCoercion.coerceToType(Book, REFLECTION, ["title", "cost", "serialNumber"], args)
+        final TypeCoercionResult constructionResult = TypeCoercer.coerceToType(Book, REFLECTION, ["title", "cost", "serialNumber"], args)
         final Book actualBook = (Book) constructionResult.result
 
         then:
@@ -134,7 +134,7 @@ class ReflectionConstructionMethodTest extends Specification {
     @Unroll
     def "test CoerceToType Unsuitable"() {
         when:
-        final TypeCoercionResult constructionResult = TypeCoercion.coerceToType(Book, CONSTRUCTORS, ["author", "title", "cost", "serialNumber"], args)
+        final TypeCoercionResult constructionResult = TypeCoercer.coerceToType(Book, CONSTRUCTORS, ["author", "title", "cost", "serialNumber"], args)
 
         then:
         assert constructionResult.suitability == NOT_SUITABLE

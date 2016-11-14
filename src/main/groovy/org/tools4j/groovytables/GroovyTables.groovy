@@ -21,15 +21,23 @@ class GroovyTables {
         return SimpleTableParser.createListOfArrays(tableContent)
     }
 
-    static List<Row> createListOfRowObjects(Closure tableContent) {
+    static List<Row> createListOfRowsObjects(Closure tableContent) {
         return SimpleTableParser.createListOfRows(tableContent)
+    }
+
+    static Rows createRows(Closure tableContent) {
+        return SimpleTableParser.createRows(tableContent)
     }
 
     static <T> List<T> createFromTable(final Class<T> clazz, final Closure tableContent) {
         return CoercionTableParser.createFromTable(clazz, ConstructionMethodFilter.INCLUDE_ALL, tableContent)
     }
 
-    static <T> List<T> createFromTable(final Class<T> clazz, final Predicate<ConstructionMethod> constructionMethodFilter, final Closure tableContent) {
+    static <T> List<T> createFromTable(final Class<T> clazz, final Predicate<Callable> constructionMethodFilter, final Closure tableContent) {
         return CoercionTableParser.createFromTable(clazz, constructionMethodFilter, tableContent)
+    }
+
+    static Rows withTable(final Closure tableContent) {
+        return SimpleTableParser.createRows(tableContent)
     }
 }
