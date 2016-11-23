@@ -75,7 +75,7 @@ class ExamplesTest extends Specification {
             Side.SELL | "AUD/USD" | 1.0026  | 1600000
             Side.SELL | "AUD/USD" | 1.0028  | 2020000
 
-        }.execute { Side side, String symbol, double price, int qty ->
+        }.forEachRow { Side side, String symbol, double price, int qty ->
             quoteBook.getSide(side).add(new Quote(symbol: symbol, price: price, quantity: qty))
         }
 
@@ -98,7 +98,7 @@ class ExamplesTest extends Specification {
             Side.SELL | "AUD/USD" | 1.0026  | 1600000
             Side.SELL | "AUD/USD" | 1.0028  | 2020000
 
-        }.execute {
+        }.forEachRow {
             quoteBook.getSide(side).add(new Quote(symbol: symbol, price: price, quantity: qty))
         }
 

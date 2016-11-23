@@ -19,7 +19,15 @@ class Rows implements Iterable<Row>{
         this.columnHeadings = columnHeadings
     }
 
+    @Deprecated
+    /**
+     * Deprecated - Use forEachRow instead
+     */
     public <T> T execute(final Closure<T> closure){
+        return forEachRow(closure)
+    }
+
+    public <T> T forEachRow(final Closure<T> closure){
         final ClosureMethod<T> closureMethod = new ClosureMethod<>(closure)
 
         for(final Row row: rows){

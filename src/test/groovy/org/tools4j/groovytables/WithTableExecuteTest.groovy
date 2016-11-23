@@ -15,7 +15,7 @@ class WithTableExecuteTest extends Specification {
             "one"         | 1
             "two"         | 2
             "three"       | 3
-        }.execute{ final String myString, final int myNum ->
+        }.forEachRow{ final String myString, final int myNum ->
             results.add([myString, myNum])
         }
         assert results.size() == 3
@@ -30,7 +30,7 @@ class WithTableExecuteTest extends Specification {
             "one"         | 1 | 2 | 3
             "two"         | 2 | 3 | 4
             "three"       | 3 | 4 | 5
-        }.execute{ final String myString, final ... myNums ->
+        }.forEachRow{ final String myString, final ... myNums ->
             assert false: "Code should not get here.  Exception should have already occurred"
             //results.add([myString, myNums])
         }
@@ -52,7 +52,7 @@ class WithTableExecuteTest extends Specification {
             "one"         | 1
             "two"         | 2
             "three"       | 3
-        }.execute{ final String myString, final long myNum ->
+        }.forEachRow{ final String myString, final long myNum ->
             results.add([myString, myNum])
         }
         assert results.size() == 3
@@ -67,7 +67,7 @@ class WithTableExecuteTest extends Specification {
             "one"         | 1
             "two"         | 2
             "three"       | 3
-        }.execute{ final String myString, final boolean shouldBeANumber ->
+        }.forEachRow{ final String myString, final boolean shouldBeANumber ->
             assert false: "Code should not get here.  Exception should have already occurred"
         }
 
@@ -80,7 +80,7 @@ class WithTableExecuteTest extends Specification {
         given:
         List<List<Object>> results = new ArrayList<>()
         GroovyTables.withTable {
-        }.execute{ final String myString, final int myNum ->
+        }.forEachRow{ final String myString, final int myNum ->
             results.add([myString, myNum])
         }
         assert results.isEmpty()
@@ -93,7 +93,7 @@ class WithTableExecuteTest extends Specification {
             1     | 2    |  2
             2     | 3    |  6
             3     | 4    | 12
-        }.execute {
+        }.forEachRow {
             assert num1 * num2 == product
         }
     }
@@ -106,7 +106,7 @@ class WithTableExecuteTest extends Specification {
             "one"         | 1
             "two"         | 2
             "three"       | 3
-        }.execute {
+        }.forEachRow {
             results.add([myString, myNum])
         }
 
@@ -123,7 +123,7 @@ class WithTableExecuteTest extends Specification {
             "one"         | 1
             "two"         | 2
             "three"       | 3
-        }.execute{ final String myString, final int myNum ->
+        }.forEachRow{ final String myString, final int myNum ->
             assert false: "Code should not get here.  Exception should have already occurred"
         }
 
@@ -138,7 +138,7 @@ class WithTableExecuteTest extends Specification {
             "one"         | 1
             "two"         | 2
             "three"       | 3
-        }.execute{
+        }.forEachRow{
             assert false: "Code should not get here.  Exception should have already occurred"
         }
 

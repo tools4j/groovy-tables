@@ -9,7 +9,7 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'org.tools4j', name: 'groovy-tables', version: '1.3'
+    testCompile group: 'org.tools4j', name: 'groovy-tables', version: '1.4'
 }
 ```
 ###Maven
@@ -17,7 +17,7 @@ dependencies {
 <dependency>
     <groupId>org.tools4j</groupId>
     <artifactId>groovy-tables</artifactId>
-    <version>1.3</version>
+    <version>1.4</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -105,7 +105,7 @@ GroovyTables.withTable {
     Side.SELL | "AUD/USD" | 1.0026  | 1600000
     Side.SELL | "AUD/USD" | 1.0028  | 2020000
 
-}.execute {
+}.forEachRow {
     quoteBook.getSide(side).add(new Quote(symbol: symbol, price: price, quantity: qty))
 }
 ```
@@ -120,7 +120,7 @@ GroovyTables.withTable {
     Side.SELL | "AUD/USD" | 1.0026  | 1600000
     Side.SELL | "AUD/USD" | 1.0028  | 2020000
 
-}.execute { Side side, String symbol, double price, int qty ->
+}.forEachRow { Side side, String symbol, double price, int qty ->
     quoteBook.getSide(side).add(new Quote(symbol: symbol, price: price, quantity: qty))
 }
 
