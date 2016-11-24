@@ -1,7 +1,7 @@
 package org.tools4j.groovytables.releasetest
 
+import org.tools4j.groovytables.GroovyTables
 import spock.lang.Specification
-import org.tools4j.groovytables.CreateFromTable
 
 /**
  * User: ben
@@ -11,7 +11,7 @@ import org.tools4j.groovytables.CreateFromTable
 class ReleaseTest extends Specification{
     def "test"() {
         when:
-        def books = CreateFromTable.createListOf(Book.class).fromTable {
+        def books = GroovyTables.createListOf(Book.class).fromTable {
             author         | title                  | cost  | year
             "Terry Denton" | "Gasp"                 | 15.50 | 1990
             "Terry Denton" | "Flying Man"           | 15.23 | 1991
