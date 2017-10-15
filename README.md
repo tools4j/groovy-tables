@@ -1,8 +1,8 @@
-#Groovy Tables
-##Overview
+# Groovy Tables
+## Overview
 Groovy Tables is a groovy library which allows you to create lists of objects using a table like grammar.  It was written primarily for use when writing test cases.
-##How to use
-###Gradle
+## How to use
+### Gradle
 ```
 repositories {
     mavenCentral()
@@ -12,7 +12,7 @@ dependencies {
     testCompile group: 'org.tools4j', name: 'groovy-tables', version: '1.5'
 }
 ```
-###Maven
+### Maven
 ```
 <dependency>
     <groupId>org.tools4j</groupId>
@@ -21,8 +21,8 @@ dependencies {
     <scope>test</scope>
 </dependency>
 ```
-##Examples
-###Object creation
+## Examples
+### Object creation
 The following example creates a list of Book objects
 ```
 List<Book> books = GroovyTables.createListOf(Book.class).fromTable {
@@ -92,7 +92,7 @@ List<Book> books = GroovyTables.createFromTable(Book.class, ConstructionMethodFi
 });
 ```
 The field names (column headings) are only used when the api attempts to call setter methods after constructing an object.  So if field names are omitted, the API will simply not attempt to construct an instance using reflection.
-###Closure chaining
+### Closure chaining
 A new recently added feature, you can chain a closure at the end of the table, to consume the table. e.g.
 ```
 GroovyTables.withTable {
@@ -125,7 +125,7 @@ GroovyTables.withTable {
 }
 
 ```
-###Simple array creation
+### Simple array creation
 You can also create simple lists of arrays.  e.g.
 ```
 final List<Object[]> listOfArrays = GroovyTables.createListOfArrays {
@@ -140,15 +140,15 @@ Output:
 [[1, 2, 3], [2, 3, 5], [55, 5, 60]]
 
 ```
-##Some details
-###Methods of construction
+## Some details
+### Methods of construction
 There are three methods of construction.  Class Constructors, Static Factory Methods, and Reflection
   
 1. Class Constructors - The API takes constructors as a preference compared to the other two methods.  The API will look at each constructor and will compare the parameters of the constructor, with the given arguments.  If the given arguments can be coerced into the list of parameters in the constructor, then that constructor is deemed a candidate.
 2. Static Factory Methods - The API first builds a list of static class methods, which return a type which matches the class we are constructing.  Then, the same as for contructors, the method's parameters are compared with the given arguments to discover matches.
 3. Reflection - The API will first look to see if a zero arg constructor exists.  If it does, it will then see if a suitable setter exists for each argument given (this is why field names are required when the Reflection method is used).  If a setter cannot be found for a field, then the API checks whether a field can be accessed directly.  Once it has confirmed that each column has a corresponding field that can be accessed, reflection is deemed a construction candidate.
 
-####How a construction method is selected
+#### How a construction method is selected
 Suitable construction methods are analyzed before construction takes place.  A decision is then made regarding the most suitable construction method.  This decision is made based on:
 
 1. Any construction method filter that the caller has passed.  (No filter is passed by default).
@@ -157,11 +157,11 @@ Suitable construction methods are analyzed before construction takes place.  A d
 
 A construction method is selected separately for each 'line' of the table.  In the future we might cache last used construction methods but initial performance testing deemed little benefit was gained in terms of milliseconds of execution.
 
-###Turning on logging
+### Turning on logging
 If you want to debug/understand what groovy-tables is doing, you can turn logging on.  Logging at the moment just goes to System.out
 ```
 org.tools4j.groovytables.Logger.setCurrentLevel(org.tools4j.groovytables.Logger.Level.DEBUG)
 ```
-##Acknowledgments
+## Acknowledgments
 Thanks to Christian Baranowski whose blog post here: http://tux2323.blogspot.co.uk/2013/04/simple-table-dsl-in-groovy.html, inspired the fancy usage of operator overloading to achieve the table like grammar.
 
