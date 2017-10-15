@@ -81,7 +81,11 @@ artifacts {
 }
 
 signing {
-    sign configurations.archives
+    if(hasProperty('signing.keyId')) {
+        sign configurations.archives
+    } else {
+        println 'singing.keyId property not found, therefore not signing.'
+    }
 }
 
 uploadArchives {
