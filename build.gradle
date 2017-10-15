@@ -1,5 +1,5 @@
 group 'org.tools4j'
-version '1.4'
+version '1.5'
 
 apply plugin: 'groovy'
 apply plugin: 'java'

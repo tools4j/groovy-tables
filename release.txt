@@ -1,0 +1,4 @@
+Run gradle task 'uploadArchives'
+Login to Sonatype
+Close the groovy-tables repository
+Release the groovy-tables repository
