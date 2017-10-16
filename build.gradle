@@ -119,8 +119,8 @@ uploadArchives {
 
                 licenses {
                     license {
-                        name 'GNU General Public License (GPL)'
-                        url 'http://www.gnu.org/licenses/gpl.txt'
+                        name 'The MIT License'
+                        url 'https://opensource.org/licenses/MIT'
                     }
                 }
 
