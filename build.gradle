@@ -1,5 +1,5 @@
 group 'org.tools4j'
-version '1.5'
+version '1.6'
 
 apply plugin: 'groovy'
 apply plugin: 'maven'
@@ -100,15 +100,12 @@ uploadArchives {
         mavenDeployer {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-            String username = hasProperty('ossrhUsername') ? ossrhUsername : System.getenv('ossrhUsername')
-            String password = hasProperty('ossrhPassword') ? ossrhPassword : System.getenv('ossrhPassword')
-
             repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: username, password: password)
+                authentication(userName: ossrhUsername, password: ossrhPassword)
             }
 
             snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: username, password: password)
+                authentication(userName: ossrhUsername, password: ossrhPassword)
             }
 
             pom.project {

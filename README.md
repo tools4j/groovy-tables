@@ -9,7 +9,7 @@ repositories {
 }
 
 dependencies {
-    testCompile group: 'org.tools4j', name: 'groovy-tables', version: '1.5'
+    testCompile group: 'org.tools4j', name: 'groovy-tables', version: '1.6'
 }
 ```
 ### Maven
@@ -17,7 +17,7 @@ dependencies {
 <dependency>
     <groupId>org.tools4j</groupId>
     <artifactId>groovy-tables</artifactId>
-    <version>1.5</version>
+    <version>1.6</version>
     <scope>test</scope>
 </dependency>
 ```

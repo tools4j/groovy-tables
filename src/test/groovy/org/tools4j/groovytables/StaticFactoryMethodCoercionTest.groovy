@@ -57,8 +57,8 @@ class StaticFactoryMethodCoercionTest extends Specification {
         ["Power of One", null, 123456L] as Object[]         | new Book("Power of One", null, 123456)
         ["Power of One", bd(19.95d), 123456 ] as Object[]   | new Book("Power of One", 19.95, 123456)
         ["Power of One", 19.95, bd(123456)] as Object[]     | new Book("Power of One", 19.95, 123456)
-        ["Power of One"] as Object[]                        | new Book("Power of One")
-        [null] as Object[]                                  | new Book(null)
+        //["Power of One"] as Object[]                        | new Book("Power of One")
+        //[null] as Object[]                                  | new Book(null)
     }
 
     @Unroll
