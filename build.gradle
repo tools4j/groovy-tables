@@ -2,6 +2,7 @@ group 'org.tools4j'
 version '1.6'
 
 apply plugin: 'groovy'
+apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
@@ -29,14 +30,6 @@ sourceSets {
         groovy {
             srcDir 'src/codegentest/groovy'
         }
-    }
-}
-
-test {
-    testLogging {
-        events "failed"
-        showStandardStreams true
-        outputs.upToDateWhen {false}
     }
 }
 
@@ -88,11 +81,7 @@ artifacts {
 }
 
 signing {
-    if(hasProperty('signing.keyId')) {
-        sign configurations.archives
-    } else {
-        println 'singing.keyId property not found, therefore not signing.'
-    }
+    sign configurations.archives
 }
 
 uploadArchives {
