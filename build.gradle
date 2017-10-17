@@ -33,6 +33,13 @@ sourceSets {
     }
 }
 
+test {
+    testLogging {
+        events "failed"
+        exceptionFormat "short"
+    }
+}
+
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
     from javadoc
