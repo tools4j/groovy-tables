@@ -2,7 +2,6 @@ group 'org.tools4j'
 version '1.5'
 
 apply plugin: 'groovy'
-apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'signing'
 
@@ -36,7 +35,6 @@ sourceSets {
 test {
     testLogging {
         events "failed"
-        exceptionFormat "short"
     }
 }
 
@@ -66,9 +64,9 @@ clean.doFirst {
 }
 
 dependencies {
-    compile "org.codehaus.groovy:groovy-all:2.4.1"
-    codegenmainCompile "org.codehaus.groovy:groovy-all:2.4.1"
-    codegentestCompile "org.codehaus.groovy:groovy-all:2.4.1"
+    compile "org.codehaus.groovy:groovy-all:2.4.10"
+    codegenmainCompile "org.codehaus.groovy:groovy-all:2.4.10"
+    codegentestCompile "org.codehaus.groovy:groovy-all:2.4.10"
     codegentestCompile sourceSets.codegenmain.output
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
