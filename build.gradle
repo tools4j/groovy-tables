@@ -35,6 +35,8 @@ sourceSets {
 test {
     testLogging {
         events "failed"
+        showStandardStreams true
+        outputs.upToDateWhen {false}
     }
 }
 
