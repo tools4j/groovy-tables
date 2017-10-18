@@ -81,7 +81,11 @@ artifacts {
 }
 
 signing {
-    sign configurations.archives
+    if(project.hasProperty('signing.keyId')) {
+        sign configurations.archives
+    } else {
+        println 'signing.keyId property not found, therefore not signing.'
+    }
 }
 
 uploadArchives {
@@ -89,12 +93,15 @@ uploadArchives {
         mavenDeployer {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
+            final String sonatypeUsername = project.hasProperty('ossrhUsername') ? ossrhUsername: System.getenv('ossrhUsername')
+            final String sonatypePassword = project.hasProperty('ossrhPassword') ? ossrhUsername: System.getenv('ossrhPassword')
+
             repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
             }
 
             snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
+                authentication(userName: sonatypeUsername, password: sonatypePassword)
             }
 
             pom.project {
