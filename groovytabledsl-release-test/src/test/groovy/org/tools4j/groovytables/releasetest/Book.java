@@ -15,7 +15,7 @@ public class Book {
     Double cost;
     long year;
 
-    public Book(final String author, final String title, final Double cost, final long serialNumber) {
+    public Book(final String author, final String title, final Double cost, final long year) {
         this.author = author;
         this.title = title;
         this.cost = cost;
